@@ -1,3 +1,4 @@
+<!-- 侧边栏 -->
 <script setup>
 import SidebarButtonItemVue from './SidebarButtonItem.vue';
 import SidebarUserButtonItem from './SidebarUserButtonItem.vue';

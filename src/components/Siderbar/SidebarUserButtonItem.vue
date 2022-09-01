@@ -1,3 +1,4 @@
+<!-- 侧边栏用户按钮 -->
 <script setup></script>
 <template>
     <div class="dropdown border-top">
