@@ -11,7 +11,7 @@ import MainViewItem from './components/MainView/MainViewItem.vue'
   <div class="d-flex" style="height: calc(100% - 50px) ;">
     <SidebarItem style="z-index: 1;" />
     <ListMenuItem />
-    <MainViewItem />
+    <MainViewItem style="width: 100%"/>
   </div>
 </template>
 
