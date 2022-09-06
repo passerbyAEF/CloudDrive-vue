@@ -1,8 +1,44 @@
 <!-- 文件列表 -->
 <script setup>
 import fileimg from '@/assets/icons/fileicon.png'
+import { ref } from 'vue';
+
+const selectallbutton = ref()
+const messagetext = ref()
+const selectbuttons = ref([])
+const emit = defineEmits(['selectnum'])
 
 
+function setSelectButtonRef(el) {
+    selectbuttons.value.push(el)
+}
+
+function selectAllButtonClick(el) {
+    let k = el.currentTarget.checked;
+    selectbuttons.value.forEach(element => {
+        element.checked = k;
+    });
+    setMessageText();
+}
+
+function selectButtonClick(el) {
+    setMessageText();
+}
+
+function setMessageText() {
+    let num = 0;
+    selectbuttons.value.forEach(element => {
+        if (element.checked) {
+            num++;
+        }
+    });
+    emit('selectnum', num)
+    if (num == 0) {
+        messagetext.value.innerText = "文件名"
+    } else {
+        messagetext.value.innerText = "当前已选中" + num + "个文件/文件夹"
+    }
+}
 
 </script>
 <template>
@@ -18,11 +54,12 @@ import fileimg from '@/assets/icons/fileicon.png'
                 <tr>
                     <th>
                         <div class="input-group checkboxCenter">
-                            <input class="form-check-input mt-0" type="checkbox" value="">
+                            <input ref="selectallbutton" class="form-check-input mt-0" @click="selectAllButtonClick"
+                                type="checkbox" value="">
                         </div>
                     </th>
                     <th>
-                        <span class="pTheadText">文件名</span>
+                        <span ref="messagetext" class="pTheadText">文件名</span>
                     </th>
                     <th>
                         <span class="pTheadText">修改日期</span>
@@ -46,7 +83,8 @@ import fileimg from '@/assets/icons/fileicon.png'
                 <tr v-for="n in 5">
                     <th class="pt-3 pb-3">
                         <div class="input-group checkboxCenter">
-                            <input class="form-check-input mt-0" type="checkbox" value="">
+                            <input :ref="setSelectButtonRef" @click="selectButtonClick" class="form-check-input mt-0"
+                                type="checkbox" value="">
                         </div>
                     </th>
                     <th class="thline">
