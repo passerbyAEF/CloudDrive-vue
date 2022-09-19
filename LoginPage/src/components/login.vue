@@ -7,20 +7,20 @@ function gotoRegister() {
 </script>
 
 <template>
-    <form action="">
+    <form action="http://localhost:5616/api/login" method="post">
         <img class="mb-4" src="https://avatars.githubusercontent.com/u/43606074?v=4" width="150" height="150">
         <h1 class="h3 mb-3 fw-normal">请登录</h1>
         <div class="form-floating">
-            <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com">
+            <input type="email" name="email" class="form-control" placeholder="name@example.com">
             <label for="floatingInput">邮箱</label>
         </div>
         <div class="form-floating">
-            <input type="password" class="form-control" id="floatingPassword" placeholder="Password">
+            <input type="password" name="pwd" class="form-control" placeholder="Password">
             <label for="floatingPassword">密码</label>
         </div>
         <div class="checkbox mb-3">
             <label>
-                <input type="checkbox" value="remember-me"> 记住我
+                <input type="checkbox" name="remember" value="1"> 记住我
             </label>
         </div>
         <button class="w-100 btn btn-lg btn-primary" type="submit">登录</button>
