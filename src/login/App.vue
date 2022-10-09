@@ -2,6 +2,7 @@
 import { ref } from 'vue';
 import loginPage from './components/login.vue'
 import registerPage from './components/register.vue'
+import Register from './components/register.vue';
 
 let k = ref(true)
 

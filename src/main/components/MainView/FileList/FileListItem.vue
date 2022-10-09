@@ -1,6 +1,6 @@
 <!-- 文件列表 -->
 <script setup>
-import fileimg from '@/assets/icons/fileicon.png'
+import fileimg from 'Main@/assets/icons/fileicon.png'
 import { ref } from 'vue';
 
 const selectallbutton = ref()
