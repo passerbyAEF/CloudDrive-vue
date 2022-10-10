@@ -11,7 +11,7 @@ function gotoLogin() {
 }
 </script>
 <template>
-  <form action="http://localhost:5616/api/register" method="post">
+  <form action="/api/register" method="post">
     <img class="mb-4" src="https://avatars.githubusercontent.com/u/43606074?v=4" width="150" height="150">
     <h1 class="h3 mb-3 fw-normal">注册</h1>
     <div class="form-floating">

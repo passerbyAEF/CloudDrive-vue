@@ -20,5 +20,14 @@ export default defineConfig({
         login: resolve(__dirname, "src/login/index.html")
       }
     }
+  },
+  server: {
+    proxy: {
+      "/api": {
+        target: "http://localhost:5616/",
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api/, "")
+      }
+    }
   }
 })

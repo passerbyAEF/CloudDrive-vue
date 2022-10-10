@@ -7,7 +7,7 @@ function gotoRegister() {
 </script>
 
 <template>
-    <form action="http://localhost:5616/api/login" method="post">
+    <form action="/api/login" method="post">
         <img class="mb-4" src="https://avatars.githubusercontent.com/u/43606074?v=4" width="150" height="150">
         <h1 class="h3 mb-3 fw-normal">请登录</h1>
         <div class="form-floating">
