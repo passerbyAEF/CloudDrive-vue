@@ -2,11 +2,12 @@ import { fileURLToPath, URL } from 'node:url'
 
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
+import ElementPlus from 'unplugin-element-plus/vite'
 import { resolve } from 'node:path'
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [vue()],
+  plugins: [vue(),ElementPlus({})],
   resolve: {
     alias: {
       'Main@': fileURLToPath(new URL('./src/main', import.meta.url)),
@@ -23,8 +24,18 @@ export default defineConfig({
   },
   server: {
     proxy: {
-      "/api": {
+      // "/api/login": {
+      //   target: "http://localhost:5616/",
+      //   changeOrigin: true,
+      //   rewrite: (path) => path.replace(/^\/api/, "")
+      // },
+      "/api/register": {
         target: "http://localhost:5616/",
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api/, "")
+      },
+      "/api": {
+        target: "http://localhost:8080/",
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, "")
       }
