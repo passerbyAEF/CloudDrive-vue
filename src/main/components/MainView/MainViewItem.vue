@@ -53,6 +53,7 @@ function createFolder() {
         .then((e) => {
             console.log(e)
             fileListView.value.getList(nowFolderId.value)
+            createDialogVisible.value = false
         })
         .catch((error) => {
             alert("网络异常！")
@@ -174,17 +175,24 @@ function renameSelect() {
 }
 
 function folderSelectOK() {
-    moveSelect(treeRef.getCurrentNode().folderId)
-
+    let tofolderId = treeRef.value.getCurrentNode().folderId
+    fileListView.value.tableRef.getSelectionRows().find(element => {
+        if (element.id == tofolderId) {
+            alert("移动请不要选择文件夹本身")
+        }
+    });
+    moveSelect(tofolderId)
     moveDialogVisible.value = false;
 }
 
 function fileListGotoFolder(data) {
     fileListView.value.getList(data.folderId)
     urlNav.value.addFolder({ name: data.name, folderId: data.folderId })
+    nowFolderId.value = data.folderId
 }
 function navGotoFolder(folderId) {
     fileListView.value.getList(folderId)
+    nowFolderId.value = folderId
 }
 </script>
 <template>
@@ -217,7 +225,7 @@ function navGotoFolder(folderId) {
         <template #footer>
             <span class="dialog-footer">
                 <el-button @click="createDialogVisible = false">关闭</el-button>
-                <el-button type="primary" @click="createDialogVisible = false; createFolder()">确认</el-button>
+                <el-button type="primary" @click="createFolder()">确认</el-button>
             </span>
         </template>
     </el-dialog>

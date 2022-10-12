@@ -91,7 +91,8 @@ function getImg(n) {
 }
 
 function itemClick(row, column, event) {
-    emit("gotoFolder", { name: row.name, folderId: row.id })
+    if (row.type == 0)
+        emit("gotoFolder", { name: row.name, folderId: row.id })
 }
 
 defineExpose({ getList, tableRef })
