@@ -8,10 +8,10 @@ import MainViewItem from './components/MainView/MainViewItem.vue'
 
 <template>
   <HeaderItem style="z-index: 2;" />
-  <div class="d-flex" style="height: calc(100% - 50px) ;">
+  <div class="d-flex" style="height: calc(100% - 50px) ; width: 100%;">
     <SidebarItem style="z-index: 1;" />
     <ListMenuItem />
-    <MainViewItem style="width: 100%"/>
+    <MainViewItem />
   </div>
 </template>
 
