@@ -4,7 +4,6 @@ import UrlItem from './UrlItem.vue';
 import FileListItem from './FileList/FileListItem.vue';
 import axios from "axios"
 import { reactive, ref } from 'vue'
-import { functions } from 'lodash';
 
 const fileListView = ref();
 const urlNav = ref();
@@ -40,7 +39,7 @@ axios.get("/api/File/GetRoot")
         urlNav.value.setRootFolderId(e.data.data)
     })
     .catch((error) => {
-        alert("网络异常！")
+        ElMessage('网络异常！')
         //setTimeout(200,getList(folderId))
     })
 
@@ -53,12 +52,13 @@ function createFolder() {
         .then((e) => {
             console.log(e)
             fileListView.value.getList(nowFolderId.value)
-            createDialogVisible.value = false
         })
         .catch((error) => {
-            alert("网络异常！")
+        ElMessage('网络异常！')
             //setTimeout(200,getList(folderId))
         })
+    createDialogVisible.value = false
+    form.name = ""
 }
 
 const loadNode = function (node, resolve) {
@@ -90,13 +90,37 @@ function downloadfolad(id) {
 function downloadfile(id) {
 
 }
-//暂时不打算做
-function copyfolad(id) {
 
+function copyfolad(id, tf) {
+    axios.post("/api/File/CopyFolder", { folderId: id, toFolderId: tf })
+        .then((e) => {
+            console.log(e)
+            fileListView.value.getList(nowFolderId.value)
+        })
 }
-//暂时不打算做
-function copyfile(id) {
 
+function copyfile(id, tf) {
+    axios.post("/api/File/CopyFile", { folderId: id, toFolderId: tf })
+        .then((e) => {
+            console.log(e)
+            fileListView.value.getList(nowFolderId.value)
+        })
+}
+
+function copySelect(toFolderId) {
+    fileListView.value.tableRef.getSelectionRows().forEach(element => {
+        if (element.type == 1) {
+            copyfile(element.id, toFolderId)
+        } else {
+            copyfolad(element.id, toFolderId)
+        }
+    });
+}
+
+function copySelectOk() {
+    let tofolderId = treeRef.value.getCurrentNode().folderId
+    copySelect(tofolderId)
+    copyDialogVisible.value = false;
 }
 
 function deletefolad(id) {
@@ -113,6 +137,15 @@ function deletefile(id) {
             fileListView.value.getList(nowFolderId.value)
         })
 }
+function deleteSelect() {
+    fileListView.value.tableRef.getSelectionRows().forEach(element => {
+        if (element.type == 1) {
+            deletefile(element.id)
+        } else {
+            deletefolad(element.id)
+        }
+    });
+}
 function movefile(id, tf) {
     axios.post("/api/File/MoveFile", { fileId: id, toFolderId: tf })
         .then((e) => {
@@ -123,8 +156,11 @@ function movefile(id, tf) {
 function movefolad(id, tf) {
     axios.post("/api/File/MoveFolder", { folderId: id, toFolderId: tf })
         .then((e) => {
+            if(e.data.message=="Error"){
+                ElMessage(e.data.data)
+            }
             console.log(e)
-            fileListView.value.getList(nowFolderId)
+            fileListView.value.getList(nowFolderId.value)
         })
 }
 
@@ -137,24 +173,6 @@ function downloadSelect() {
         }
     });
 }
-function deleteSelect() {
-    fileListView.value.tableRef.getSelectionRows().forEach(element => {
-        if (element.type == 1) {
-            deletefile(element.id)
-        } else {
-            deletefolad(element.id)
-        }
-    });
-}
-function copySelect() {
-    fileListView.value.tableRef.getSelectionRows().forEach(element => {
-        if (element.type == 1) {
-            copyfile(element.id)
-        } else {
-            copyfolad(element.id)
-        }
-    });
-}
 function moveSelect(tofolderId) {
     fileListView.value.tableRef.getSelectionRows().forEach(element => {
         if (element.type == 1) {
@@ -164,23 +182,39 @@ function moveSelect(tofolderId) {
         }
     });
 }
-function renameSelect() {
+
+function renameFile(fileId, newName) {
+    axios.post("/api/File/RenameFile", { fileId: fileId, name: newName })
+        .then((e) => {
+            fileListView.value.getList(nowFolderId.value)
+        })
+}
+
+function renameFolder(folderId, newName) {
+    axios.post("/api/File/RenameFolder", { folderId: folderId, name: newName })
+        .then((e) => {
+            fileListView.value.getList(nowFolderId.value)
+        })
+}
+
+function renameSelect(name) {
     fileListView.value.tableRef.getSelectionRows().forEach(element => {
         if (element.type == 1) {
-            renamefile(element.id)
+            renameFile(element.id, name)
         } else {
-            renamefolad(element.id)
+            renameFolder(element.id, name)
         }
     });
+    form.name = ""
+}
+
+function renameSelectOk() {
+    renameSelect(form.name)
+    renameDialogVisible.value = false;
 }
 
 function folderSelectOK() {
     let tofolderId = treeRef.value.getCurrentNode().folderId
-    fileListView.value.tableRef.getSelectionRows().find(element => {
-        if (element.id == tofolderId) {
-            alert("移动请不要选择文件夹本身")
-        }
-    });
     moveSelect(tofolderId)
     moveDialogVisible.value = false;
 }
@@ -207,8 +241,8 @@ function navGotoFolder(folderId) {
                 <button type="button" class="btn btn-outline-primary" @click="downloadSelect()">下载</button>
                 <button type="button" class="btn btn-outline-primary" @click="deleteSelect()">删除</button>
                 <button v-if="selectnum==1" type="button" class="btn btn-outline-primary"
-                    @click="renameSelect()">重命名</button>
-                <button type="button" class="btn btn-outline-primary" @click="moveSelect()">复制</button>
+                    @click="renameDialogVisible=true">重命名</button>
+                <button type="button" class="btn btn-outline-primary" @click="copyDialogVisible = true">复制</button>
                 <button type="button" class="btn btn-outline-primary" @click="moveDialogVisible = true">移动</button>
             </div>
         </div>
@@ -225,12 +259,12 @@ function navGotoFolder(folderId) {
         <template #footer>
             <span class="dialog-footer">
                 <el-button @click="createDialogVisible = false">关闭</el-button>
-                <el-button type="primary" @click="createFolder()">确认</el-button>
+                <el-button type="primary" @click="createFolder">确认</el-button>
             </span>
         </template>
     </el-dialog>
 
-    <el-dialog v-if="moveDialogVisible" v-model="moveDialogVisible" width="30%" title="选择文件夹" class="dialog-width">
+    <el-dialog v-if="moveDialogVisible" v-model="moveDialogVisible" width="30%" title="移动至" class="dialog-width">
         <el-tree ref="treeRef" :props="treeProps" :load="loadNode" lazy>
             <template #default="{ node, data }">
                 <div style="display: flex; align-items: center">
@@ -242,6 +276,36 @@ function navGotoFolder(folderId) {
             <span class="dialog-footer">
                 <el-button @click="moveDialogVisible = false">关闭</el-button>
                 <el-button type="primary" @click="folderSelectOK">确认</el-button>
+            </span>
+        </template>
+    </el-dialog>
+
+    <el-dialog v-model="renameDialogVisible" width="30%" title="重命名" class="dialog-width">
+        <el-form :model="form">
+            <el-form-item label="新名称:" :label-width="formLabelWidth">
+                <el-input v-model="form.name" autocomplete="off" />
+            </el-form-item>
+        </el-form>
+        <template #footer>
+            <span class="dialog-footer">
+                <el-button @click="renameDialogVisible = false">关闭</el-button>
+                <el-button type="primary" @click="renameSelectOk">确认</el-button>
+            </span>
+        </template>
+    </el-dialog>
+
+    <el-dialog v-if="copyDialogVisible" v-model="copyDialogVisible" width="30%" title="复制到" class="dialog-width">
+        <el-tree ref="treeRef" :props="treeProps" :load="loadNode" lazy>
+            <template #default="{ node, data }">
+                <div style="display: flex; align-items: center">
+                    <span style="margin-left: 10px">{{ data.name }}</span>
+                </div>
+            </template>
+        </el-tree>
+        <template #footer>
+            <span class="dialog-footer">
+                <el-button @click="copyDialogVisible = false">关闭</el-button>
+                <el-button type="primary" @click="copySelectOk">确认</el-button>
             </span>
         </template>
     </el-dialog>
