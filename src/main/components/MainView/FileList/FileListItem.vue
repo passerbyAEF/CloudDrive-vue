@@ -1,13 +1,13 @@
 <!-- 文件列表 -->
 <script setup>
 import fileimg from 'Main@/assets/icons/fileicon.png'
-import pptimg from 'Main@/assets/icons/fileicon.png'
-import wordimg from 'Main@/assets/icons/fileicon.png'
-import excelimg from 'Main@/assets/icons/fileicon.png'
-import pdfimg from 'Main@/assets/icons/fileicon.png'
-import txtimg from 'Main@/assets/icons/fileicon.png'
-import imgimg from 'Main@/assets/icons/fileicon.png'
-import folderimg from 'Main@/assets/icons/fileicon.png'
+import pptimg from 'Main@/assets/icons/ppticon.png'
+import wordimg from 'Main@/assets/icons/wordicon.png'
+import excelimg from 'Main@/assets/icons/excelicon.png'
+import pdfimg from 'Main@/assets/icons/pdficon.png'
+import txtimg from 'Main@/assets/icons/txticon.png'
+import imgimg from 'Main@/assets/icons/imgicon.png'
+import folderimg from 'Main@/assets/icons/foldericon.png'
 
 import axios from "axios"
 import { ref } from 'vue';

@@ -36,11 +36,11 @@ export default defineConfig({
       //   changeOrigin: true,
       //   rewrite: (path) => path.replace(/^\/api/, "")
       // },
-      "/api/register": {
-        target: "http://localhost:5616/",
-        changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/api/, "")
-      },
+      // "/api/register": {
+      //   target: "http://localhost:5616/",
+      //   changeOrigin: true,
+      //   rewrite: (path) => path.replace(/^\/api/, "")
+      // },
       "/api": {
         target: "http://localhost:8080/",
         changeOrigin: true,
