@@ -3,7 +3,8 @@
 import constant from '../../../constant';
 import UrlItem from './UrlItem.vue';
 import FileListItem from './FileList/FileListItem.vue';
-import httpGet from '../../../httpGet'
+import httpGet from '../../../httpGet';
+import httpPost from '../../../httpPost'
 import { reactive, ref } from 'vue'
 
 const fileListView = ref();
@@ -46,14 +47,14 @@ function setnum(val) {
 }
 
 function createFolder() {
-    axios.post(constant.url.file.createFolder, { name: form.name, parentId: nowFolderId.value })
-        .then((e) => {
+    httpPost(constant.url.file.createFolder, { name: form.name, parentId: nowFolderId.value }, undefined,
+        (e) => {
             console.log(e)
             fileListView.value.getList(nowFolderId.value)
-        })
-        .catch((error) => {
+        }, (error) => {
             //setTimeout(200,getList(folderId))
-        })
+        }
+    )
     createDialogVisible.value = false
     form.name = ""
 }
@@ -89,19 +90,21 @@ function downloadfile(id) {
 }
 
 function copyfolad(id, tf) {
-    axios.post(constant.url.file.copyFolder, { folderId: id, toFolderId: tf })
-        .then((e) => {
+    httpPost(constant.url.file.copyFolder, { folderId: id, toFolderId: tf }, undefined,
+        (e) => {
             console.log(e)
             fileListView.value.getList(nowFolderId.value)
-        })
+        }
+    )
 }
 
 function copyfile(id, tf) {
-    axios.post(constant.url.file.copyFile, { folderId: id, toFolderId: tf })
-        .then((e) => {
+    httpPost(constant.url.file.copyFile, { fileId: id, toFolderId: tf }, undefined,
+        (e) => {
             console.log(e)
             fileListView.value.getList(nowFolderId.value)
-        })
+        }
+    )
 }
 
 function copySelect(toFolderId) {
@@ -121,18 +124,20 @@ function copySelectOk() {
 }
 
 function deletefolad(id) {
-    axios.post(constant.url.file.deleteFolder, { folderId: id })
-        .then((e) => {
+    httpPost(constant.url.file.deleteFolder, { folderId: id }, undefined,
+        (e) => {
             console.log(e)
             fileListView.value.getList(nowFolderId.value)
-        })
+        }
+    )
 }
 function deletefile(id) {
-    axios.post(constant.url.file.deleteFile, { fileId: id })
-        .then((e) => {
+    httpPost(constant.url.file.deleteFile, { fileId: id }, undefined,
+        (e) => {
             console.log(e)
             fileListView.value.getList(nowFolderId.value)
-        })
+        }
+    )
 }
 function deleteSelect() {
     fileListView.value.tableRef.getSelectionRows().forEach(element => {
@@ -144,21 +149,23 @@ function deleteSelect() {
     });
 }
 function movefile(id, tf) {
-    axios.post(constant.url.file.moveFile, { fileId: id, toFolderId: tf })
-        .then((e) => {
+    httpPost(constant.url.file.moveFile, { fileId: id, toFolderId: tf }, undefined,
+        (e) => {
             console.log(e)
             fileListView.value.getList(nowFolderId.value)
-        })
+        }
+    )
 }
 function movefolad(id, tf) {
-    axios.post(constant.url.file.moveFolder, { folderId: id, toFolderId: tf })
-        .then((e) => {
-            if (e.data.message == "Error") {
-                ElMessage(e.data.data)
-            }
+    httpPost(constant.url.file.moveFolder, { folderId: id, toFolderId: tf }, undefined,
+        (e) => {
+            // if (e.message == "Error") {
+            //     ElMessage(e.data)
+            // }
             console.log(e)
             fileListView.value.getList(nowFolderId.value)
-        })
+        }
+    )
 }
 
 function downloadSelect() {
@@ -181,17 +188,19 @@ function moveSelect(tofolderId) {
 }
 
 function renameFile(fileId, newName) {
-    axios.post(constant.url.file.renameFile, { fileId: fileId, name: newName })
-        .then((e) => {
+    httpPost(constant.url.file.renameFile, { fileId: fileId, name: newName }, undefined,
+        (e) => {
             fileListView.value.getList(nowFolderId.value)
-        })
+        }
+    )
 }
 
 function renameFolder(folderId, newName) {
-    axios.post(constant.url.file.renameFolder, { folderId: folderId, name: newName })
-        .then((e) => {
+    httpPost(constant.url.file.renameFolder, { folderId: folderId, name: newName }, undefined,
+        (e) => {
             fileListView.value.getList(nowFolderId.value)
-        })
+        }
+    )
 }
 
 function renameSelect(name) {
