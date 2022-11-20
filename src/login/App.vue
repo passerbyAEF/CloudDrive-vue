@@ -2,7 +2,6 @@
 import { ref } from 'vue';
 import loginPage from './components/login.vue'
 import registerPage from './components/register.vue'
-import Register from './components/register.vue';
 import './assets/main.css'
 
 let k = ref(true)

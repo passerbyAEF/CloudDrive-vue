@@ -1,4 +1,6 @@
 <script setup>
+import constant from '../../constant';
+
 const emit = defineEmits(['gotoRegister'])
 
 function gotoRegister() {
@@ -7,7 +9,7 @@ function gotoRegister() {
 </script>
 
 <template>
-    <form action="/api/login" method="post">
+    <form :action="constant.url.auth.login" method="post">
         <img class="mb-4" src="https://avatars.githubusercontent.com/u/43606074?v=4" width="150" height="150">
         <h1 class="h3 mb-3 fw-normal">请登录</h1>
         <div class="form-floating">

@@ -1,15 +1,7 @@
 <!-- 文件列表 -->
 <script setup>
-import fileimg from 'Main@/assets/icons/fileicon.png'
-import pptimg from 'Main@/assets/icons/ppticon.png'
-import wordimg from 'Main@/assets/icons/wordicon.png'
-import excelimg from 'Main@/assets/icons/excelicon.png'
-import pdfimg from 'Main@/assets/icons/pdficon.png'
-import txtimg from 'Main@/assets/icons/txticon.png'
-import imgimg from 'Main@/assets/icons/imgicon.png'
-import folderimg from 'Main@/assets/icons/foldericon.png'
-
-import axios from "axios"
+import constant from '../../../../constant'
+import httpGet from '../../../../httpGet'
 import { ref } from 'vue';
 
 const tableRef = ref()
@@ -32,9 +24,8 @@ function setMessageText() {
 }
 
 const getList = function (f) {
-    axios.get("/api/File/List", { params: { folderId: f } })
-        .then((e) => {
-            let body = e.data;
+    httpGet(constant.url.file.list, { params: { folderId: f } },
+        (body) => {
             setStorage(body.data)
             setImgs(body.data)
             listData.value = body.data
@@ -64,7 +55,7 @@ function setImgs(data) {
 }
 
 function getImg(n) {
-    if (n.type == 0) return folderimg
+    if (n.type == 0) return constant.img.folder
     let filename = n.name.toLowerCase()
 
     let pptreg = /\.(ppt|pptx)$/
@@ -75,19 +66,19 @@ function getImg(n) {
     let imgreg = /\.(bmp|jpg|jpeg|png|gif)$/
 
     if (pptreg.test(filename)) {
-        return pptimg
+        return constant.img.file
     } else if (wordreg.test(filename)) {
-        return wordimg
+        return constant.img.word
     } else if (excelreg.test(filename)) {
-        return excelimg
+        return constant.img.excel
     } else if (pdfreg.test(filename)) {
-        return pdfimg
+        return constant.img.pdf
     } else if (txtreg.test(filename)) {
-        return txtimg
+        return constant.img.file
     } else if (imgreg.test(filename)) {
-        return imgimg
+        return constant.img.img
     }
-    return fileimg
+    return constant.img.file
 }
 
 function itemClick(row, column, event) {

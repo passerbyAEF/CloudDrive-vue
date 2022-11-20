@@ -4,7 +4,7 @@ import App from './src/App.vue'
 
 let routes = [
     {
-        path: '/home',
+        path: '/',
         component: () => import('Main@/Main.vue'),
         mode: "history"
     },
@@ -15,7 +15,7 @@ let routes = [
     },
 ]
 
-const router = VueRouter.createRouter({
+let router = VueRouter.createRouter({
     // 4. 内部提供了 history 模式的实现。为了简单起见，我们在这里使用 hash 模式。
     history: VueRouter.createWebHistory(),
     routes, // `routes: routes` 的缩写

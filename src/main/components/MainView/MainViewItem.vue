@@ -1,8 +1,9 @@
 <!-- 主显示页 -->
 <script setup>
+import constant from '../../../constant';
 import UrlItem from './UrlItem.vue';
 import FileListItem from './FileList/FileListItem.vue';
-import axios from "axios"
+import httpGet from '../../../httpGet'
 import { reactive, ref } from 'vue'
 
 const fileListView = ref();
@@ -32,29 +33,25 @@ const treeProps = {
 
 const nowFolderId = ref(0)
 
-axios.get("/api/File/GetRoot")
-    .then((e) => {
-        nowFolderId.value = e.data.data;
-        fileListView.value.getList(e.data.data)
-        urlNav.value.setRootFolderId(e.data.data)
+httpGet(constant.url.file.getRoot, null,
+    (e) => {
+        nowFolderId.value = e.data;
+        fileListView.value.getList(e.data)
+        urlNav.value.setRootFolderId(e.data)
     })
-    .catch((error) => {
-        ElMessage('网络异常！')
-        //setTimeout(200,getList(folderId))
-    })
+
 
 function setnum(val) {
     selectnum.value = val
 }
 
 function createFolder() {
-    axios.post("/api/File/CreateFolder", { name: form.name, parentId: nowFolderId.value })
+    axios.post(constant.url.file.createFolder, { name: form.name, parentId: nowFolderId.value })
         .then((e) => {
             console.log(e)
             fileListView.value.getList(nowFolderId.value)
         })
         .catch((error) => {
-        ElMessage('网络异常！')
             //setTimeout(200,getList(folderId))
         })
     createDialogVisible.value = false
@@ -63,14 +60,14 @@ function createFolder() {
 
 const loadNode = function (node, resolve) {
     if (node.level === 0) {
-        axios.get("/api/File/GetRoot")
-            .then((e) => {
-                resolve([{ name: '主文件夹', folderId: e.data.data }])
-            })
+        httpGet(constant.url.file.getRoot, null,
+            (e) => {
+                resolve([{ name: '主文件夹', folderId: e.data }])
+            }
+        )
     } else {
-        axios.get("/api/File/List", { params: { folderId: node.data.folderId } })
-            .then((e) => {
-                let body = e.data;
+        httpGet(constant.url.file.list, { params: { folderId: node.data.folderId } },
+            (body) => {
                 let li = [];
                 body.data.forEach((e) => {
                     if (e.type == 0) {
@@ -92,7 +89,7 @@ function downloadfile(id) {
 }
 
 function copyfolad(id, tf) {
-    axios.post("/api/File/CopyFolder", { folderId: id, toFolderId: tf })
+    axios.post(constant.url.file.copyFolder, { folderId: id, toFolderId: tf })
         .then((e) => {
             console.log(e)
             fileListView.value.getList(nowFolderId.value)
@@ -100,7 +97,7 @@ function copyfolad(id, tf) {
 }
 
 function copyfile(id, tf) {
-    axios.post("/api/File/CopyFile", { folderId: id, toFolderId: tf })
+    axios.post(constant.url.file.copyFile, { folderId: id, toFolderId: tf })
         .then((e) => {
             console.log(e)
             fileListView.value.getList(nowFolderId.value)
@@ -124,14 +121,14 @@ function copySelectOk() {
 }
 
 function deletefolad(id) {
-    axios.post("/api/File/DeleteFolder", { folderId: id })
+    axios.post(constant.url.file.deleteFolder, { folderId: id })
         .then((e) => {
             console.log(e)
             fileListView.value.getList(nowFolderId.value)
         })
 }
 function deletefile(id) {
-    axios.post("/api/File/DeleteFile", { fileId: id })
+    axios.post(constant.url.file.deleteFile, { fileId: id })
         .then((e) => {
             console.log(e)
             fileListView.value.getList(nowFolderId.value)
@@ -147,16 +144,16 @@ function deleteSelect() {
     });
 }
 function movefile(id, tf) {
-    axios.post("/api/File/MoveFile", { fileId: id, toFolderId: tf })
+    axios.post(constant.url.file.moveFile, { fileId: id, toFolderId: tf })
         .then((e) => {
             console.log(e)
             fileListView.value.getList(nowFolderId.value)
         })
 }
 function movefolad(id, tf) {
-    axios.post("/api/File/MoveFolder", { folderId: id, toFolderId: tf })
+    axios.post(constant.url.file.moveFolder, { folderId: id, toFolderId: tf })
         .then((e) => {
-            if(e.data.message=="Error"){
+            if (e.data.message == "Error") {
                 ElMessage(e.data.data)
             }
             console.log(e)
@@ -184,14 +181,14 @@ function moveSelect(tofolderId) {
 }
 
 function renameFile(fileId, newName) {
-    axios.post("/api/File/RenameFile", { fileId: fileId, name: newName })
+    axios.post(constant.url.file.renameFile, { fileId: fileId, name: newName })
         .then((e) => {
             fileListView.value.getList(nowFolderId.value)
         })
 }
 
 function renameFolder(folderId, newName) {
-    axios.post("/api/File/RenameFolder", { folderId: folderId, name: newName })
+    axios.post(constant.url.file.renameFolder, { folderId: folderId, name: newName })
         .then((e) => {
             fileListView.value.getList(nowFolderId.value)
         })
@@ -232,16 +229,16 @@ function navGotoFolder(folderId) {
 <template>
     <div class="p-3" style="width: calc(100% - 300px);">
         <div>
-            <button type="button" v-if="selectnum==0" class="btn btn-primary">上传</button>
-            <div v-if="selectnum==0" class="btn-group ps-3" role="group" aria-label="Basic outlined example">
+            <button type="button" v-if="selectnum == 0" class="btn btn-primary">上传</button>
+            <div v-if="selectnum == 0" class="btn-group ps-3" role="group" aria-label="Basic outlined example">
                 <button type="button" class="btn btn-outline-primary" @click="createDialogVisible = true">新建文件夹</button>
                 <!-- <button type="button" class="btn btn-outline-primary">下载</button> -->
             </div>
-            <div v-if="selectnum!=0" class="btn-group ps-3" role="group" aria-label="Basic outlined example">
+            <div v-if="selectnum != 0" class="btn-group ps-3" role="group" aria-label="Basic outlined example">
                 <button type="button" class="btn btn-outline-primary" @click="downloadSelect()">下载</button>
                 <button type="button" class="btn btn-outline-primary" @click="deleteSelect()">删除</button>
-                <button v-if="selectnum==1" type="button" class="btn btn-outline-primary"
-                    @click="renameDialogVisible=true">重命名</button>
+                <button v-if="selectnum == 1" type="button" class="btn btn-outline-primary"
+                    @click="renameDialogVisible = true">重命名</button>
                 <button type="button" class="btn btn-outline-primary" @click="copyDialogVisible = true">复制</button>
                 <button type="button" class="btn btn-outline-primary" @click="moveDialogVisible = true">移动</button>
             </div>
