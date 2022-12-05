@@ -3,6 +3,7 @@ import axios from "axios"
 function posturl(url, data, config, successCallback, errorCallback) {
     if (errorCallback == undefined || errorCallback == null) {
         errorCallback = (error) => {
+            console.log(error)
             ElMessage('网络异常！')
         }
     }

@@ -50,35 +50,8 @@ function setStorage(data) {
 
 function setImgs(data) {
     data.forEach((item) => {
-        item.imgsrc = getImg(item);
+        item.imgsrc = constant.getImg(item);
     });
-}
-
-function getImg(n) {
-    if (n.type == 0) return constant.img.folder
-    let filename = n.name.toLowerCase()
-
-    let pptreg = /\.(ppt|pptx)$/
-    let wordreg = /\.(doc|docx)$/
-    let excelreg = /\.(xls|xlsx)$/
-    let pdfreg = /\.(pdf)$/
-    let txtreg = /\.(txt)$/
-    let imgreg = /\.(bmp|jpg|jpeg|png|gif)$/
-
-    if (pptreg.test(filename)) {
-        return constant.img.file
-    } else if (wordreg.test(filename)) {
-        return constant.img.word
-    } else if (excelreg.test(filename)) {
-        return constant.img.excel
-    } else if (pdfreg.test(filename)) {
-        return constant.img.pdf
-    } else if (txtreg.test(filename)) {
-        return constant.img.file
-    } else if (imgreg.test(filename)) {
-        return constant.img.img
-    }
-    return constant.img.file
 }
 
 function itemClick(row, column, event) {

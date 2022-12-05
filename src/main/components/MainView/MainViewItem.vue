@@ -3,12 +3,15 @@
 import constant from '../../../constant';
 import UrlItem from './UrlItem.vue';
 import FileListItem from './FileList/FileListItem.vue';
+import UPloadViewItem from './UploadViewItem.vue'
 import httpGet from '../../../httpGet';
 import httpPost from '../../../httpPost'
+import PathTreeNode from '../../../pathTree'
 import { reactive, ref } from 'vue'
 
 const fileListView = ref();
 const urlNav = ref();
+const uploadView = ref();
 
 const selectnum = ref(0);
 const treeRef = ref();
@@ -234,24 +237,117 @@ function navGotoFolder(folderId) {
     fileListView.value.getList(folderId)
     nowFolderId.value = folderId
 }
+
+function uploadfile(rootid, file) {
+    uploadView.value.addTask(rootid, file.fileObject)
+}
+
+function uploadfolder(rootid, folder) {
+    httpGet(constant.url.file.list, { params: { folderId: rootid } },
+        (body) => {
+            for (const item of body.data) {
+                //拥有重名文件夹
+                if (item.type == 0 && folder.name == item.name) {
+                    for (const item2 of folder.children) {
+                        if (item2.isFolder) {
+                            uploadfolder(item.id, item2)
+                        } else {
+                            uploadfile(item.id, item2)
+                        }
+                    }
+                    return;
+                }
+            }
+            //没有重名文件夹，创建一个新的
+            httpPost(constant.url.file.createFolder, { name: folder.name, parentId: rootid }, undefined,
+                (body) => {
+                    //创建新文件夹，后上传到文件夹中
+                    for (const item of folder.children) {
+                        if (item.isFolder) {
+                            uploadfolder(body.data, item)
+                        } else {
+                            uploadfile(body.data, item)
+                        }
+                    }
+                })
+        })
+}
+
+function uploadClick(command) {
+    let inputObj = document.createElement('input')
+    inputObj.setAttribute('style', 'display:none')
+    inputObj.setAttribute('type', 'file')
+    inputObj.setAttribute('multiple', 'true')
+    inputObj.onchange = function (event) {
+        let files = event.target.files;
+        let head = new PathTreeNode("", true);
+        for (const file of files) {
+            head.addChildren(file.webkitRelativePath, file)
+        }
+        console.log(head)
+        switch (command) {
+            case "file":
+                for (const file of head.children) {
+                    uploadfile(nowFolderId.value, file)
+                }
+                break;
+            case "folder":
+                uploadfolder(nowFolderId.value, head.children[0])
+                break;
+        }
+        document.body.removeChild(inputObj)
+    }
+    if (command == "folder") {
+        inputObj.setAttribute('webkitdirectory', 'true')
+    }
+    document.body.appendChild(inputObj);
+    inputObj.click();
+}
 </script>
 <template>
     <div class="p-3" style="width: calc(100% - 300px);">
-        <div>
-            <button type="button" v-if="selectnum == 0" class="btn btn-primary">上传</button>
-            <div v-if="selectnum == 0" class="btn-group ps-3" role="group" aria-label="Basic outlined example">
-                <button type="button" class="btn btn-outline-primary" @click="createDialogVisible = true">新建文件夹</button>
-                <!-- <button type="button" class="btn btn-outline-primary">下载</button> -->
-            </div>
-            <div v-if="selectnum != 0" class="btn-group ps-3" role="group" aria-label="Basic outlined example">
-                <button type="button" class="btn btn-outline-primary" @click="downloadSelect()">下载</button>
-                <button type="button" class="btn btn-outline-primary" @click="deleteSelect()">删除</button>
-                <button v-if="selectnum == 1" type="button" class="btn btn-outline-primary"
-                    @click="renameDialogVisible = true">重命名</button>
-                <button type="button" class="btn btn-outline-primary" @click="copyDialogVisible = true">复制</button>
-                <button type="button" class="btn btn-outline-primary" @click="moveDialogVisible = true">移动</button>
-            </div>
-        </div>
+        <el-row>
+            <el-col :span="20">
+                <div>
+                    <el-dropdown trigger="click" @command="uploadClick">
+                        <button type="button" v-if="selectnum == 0" class="btn btn-primary">上传</button>
+                        <template #dropdown>
+                            <el-dropdown-menu>
+                                <el-dropdown-item command="file">上传文件</el-dropdown-item>
+                                <el-dropdown-item command="folder">上传文件夹</el-dropdown-item>
+                            </el-dropdown-menu>
+                        </template>
+                    </el-dropdown>
+                    <div v-if="selectnum == 0" class="btn-group ps-3" role="group" aria-label="Basic outlined example">
+                        <button type="button" class="btn btn-outline-primary"
+                            @click="createDialogVisible = true">新建文件夹</button>
+                        <!-- <button type="button" class="btn btn-outline-primary">下载</button> -->
+                    </div>
+                    <div v-if="selectnum != 0" class="btn-group ps-3" role="group" aria-label="Basic outlined example">
+                        <button type="button" class="btn btn-outline-primary" @click="downloadSelect()">下载</button>
+                        <button type="button" class="btn btn-outline-primary" @click="deleteSelect()">删除</button>
+                        <button v-if="selectnum == 1" type="button" class="btn btn-outline-primary"
+                            @click="renameDialogVisible = true">重命名</button>
+                        <button type="button" class="btn btn-outline-primary"
+                            @click="copyDialogVisible = true">复制</button>
+                        <button type="button" class="btn btn-outline-primary"
+                            @click="moveDialogVisible = true">移动</button>
+                    </div>
+                </div>
+            </el-col>
+            <el-col :span="4">
+                <div style="text-align: right;">
+                    <el-dropdown trigger="click">
+                        <button type="button" v-if="selectnum == 0" class="btn btn-primary">传输列表</button>
+                        <template #dropdown>
+                            <el-dropdown-menu>
+                                <UPloadViewItem ref="uploadView" />
+                            </el-dropdown-menu>
+                        </template>
+                    </el-dropdown>
+                </div>
+            </el-col>
+        </el-row>
         <UrlItem ref="urlNav" class="pt-3 pb-3" @gotoFolder="navGotoFolder" />
         <FileListItem ref="fileListView" @selectnum="setnum" @gotoFolder="fileListGotoFolder" />
     </div>
@@ -327,7 +423,25 @@ function navGotoFolder(folderId) {
     margin-right: 10px;
 }
 
-.el-input {
-    width: 300px;
+.el-row {
+    margin-bottom: 20px;
+}
+
+.el-row:last-child {
+    margin-bottom: 0;
+}
+
+.el-col {
+    border-radius: 4px;
+}
+
+.grid-content {
+    border-radius: 4px;
+    min-height: 36px;
+}
+
+.grid-content {
+    border-radius: 4px;
+    min-height: 36px;
 }
 </style>

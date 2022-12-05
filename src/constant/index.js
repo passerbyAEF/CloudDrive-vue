@@ -11,6 +11,10 @@ let authUrl = "/api/auth"
 let fileUrl = "/api/appMain"
 
 
+
+
+
+
 export default {
     url: {
         auth: {
@@ -20,26 +24,44 @@ export default {
         file: {
             getRoot: fileUrl + "/File/GetRoot",
             list: fileUrl + "/File/List",
+
             createFolder: fileUrl + "/File/CreateFolder",
             copyFolder: fileUrl + "/File/CopyFolder",
-            copyFile: fileUrl + "/File/CopyFile",
             deleteFolder: fileUrl + "/File/DeleteFolder",
+            moveFolder: fileUrl + "/File/MoveFolder",
+            renameFolder: fileUrl + "/File/RenameFolder",
+
+            upladFile: fileUrl + "/File/Upload",
+            copyFile: fileUrl + "/File/CopyFile",
             deleteFile: fileUrl + "/File/DeleteFile",
             moveFile: fileUrl + "/File/MoveFile",
-            moveFolder: fileUrl + "/File/MoveFolder",
             renameFile: fileUrl + "/File/RenameFile",
-            renameFolder: fileUrl + "/File/RenameFolder",
-            moveFolder: fileUrl + "/File/MoveFolder",
         }
     },
-    img: {
-        file: fileimg,
-        ppt: pptimg,
-        word: wordimg,
-        excel: excelimg,
-        pdf: pdfimg,
-        txt: txtimg,
-        img: imgimg,
-        folder: folderimg,
+    getImg: function (n) {
+        if (n.type == 0) return folderimg
+        let filename = n.name.toLowerCase()
+
+        let pptreg = /\.(ppt|pptx)$/
+        let wordreg = /\.(doc|docx)$/
+        let excelreg = /\.(xls|xlsx)$/
+        let pdfreg = /\.(pdf)$/
+        let txtreg = /\.(txt)$/
+        let imgreg = /\.(bmp|jpg|jpeg|png|gif)$/
+
+        if (pptreg.test(filename)) {
+            return pptimg
+        } else if (wordreg.test(filename)) {
+            return wordimg
+        } else if (excelreg.test(filename)) {
+            return excelimg
+        } else if (pdfreg.test(filename)) {
+            return pdfimg
+        } else if (txtreg.test(filename)) {
+            return fileimg
+        } else if (imgreg.test(filename)) {
+            return imgimg
+        }
+        return fileimg
     }
 }
