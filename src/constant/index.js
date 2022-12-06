@@ -31,7 +31,7 @@ export default {
             moveFolder: fileUrl + "/File/MoveFolder",
             renameFolder: fileUrl + "/File/RenameFolder",
 
-            upladFile: fileUrl + "/File/Upload",
+            uploadFile: fileUrl + "/File/Upload",
             copyFile: fileUrl + "/File/CopyFile",
             deleteFile: fileUrl + "/File/DeleteFile",
             moveFile: fileUrl + "/File/MoveFile",
