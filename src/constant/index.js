@@ -8,7 +8,8 @@ import imgimg from 'Main@/assets/icons/imgicon.png'
 import folderimg from 'Main@/assets/icons/foldericon.png'
 
 let authUrl = "/api/auth"
-let fileUrl = "/api/appMain"
+let mainUrl = "/api/appMain"
+let fileUrl = "/api/file"
 
 
 
@@ -22,20 +23,25 @@ export default {
             register: authUrl + "/register",
         },
         file: {
-            getRoot: fileUrl + "/File/GetRoot",
-            list: fileUrl + "/File/List",
+            getRoot: mainUrl + "/File/GetRoot",
+            list: mainUrl + "/File/List",
 
-            createFolder: fileUrl + "/File/CreateFolder",
-            copyFolder: fileUrl + "/File/CopyFolder",
-            deleteFolder: fileUrl + "/File/DeleteFolder",
-            moveFolder: fileUrl + "/File/MoveFolder",
-            renameFolder: fileUrl + "/File/RenameFolder",
+            createFolder: mainUrl + "/File/CreateFolder",
+            copyFolder: mainUrl + "/File/CopyFolder",
+            deleteFolder: mainUrl + "/File/DeleteFolder",
+            moveFolder: mainUrl + "/File/MoveFolder",
+            renameFolder: mainUrl + "/File/RenameFolder",
 
-            uploadFile: fileUrl + "/File/Upload",
-            copyFile: fileUrl + "/File/CopyFile",
-            deleteFile: fileUrl + "/File/DeleteFile",
-            moveFile: fileUrl + "/File/MoveFile",
-            renameFile: fileUrl + "/File/RenameFile",
+            uploadFile: mainUrl + "/File/Upload",
+            copyFile: mainUrl + "/File/CopyFile",
+            deleteFile: mainUrl + "/File/DeleteFile",
+            moveFile: mainUrl + "/File/MoveFile",
+            renameFile: mainUrl + "/File/RenameFile",
+            getDownloadId:mainUrl+"/File/Download",
+            getDownloadflag:mainUrl+"/File/GetDownloadFlag",
+
+            uploadFilePart:fileUrl+"/File/Upload",
+            downloadFile:fileUrl+"/File/Download",
         }
     },
     getImg: function (n) {

@@ -84,15 +84,43 @@ const loadNode = function (node, resolve) {
 }
 
 //暂时不打算做
-function downloadfolad(id) {
-
-}
-//暂时不打算做
-function downloadfile(id) {
+function downloadfolder(id) {
 
 }
 
-function copyfolad(id, tf) {
+function downloadfile(id, name) {
+    ElMessage("确认中，正在等待下载")
+    httpGet(constant.url.file.getDownloadId, { params: { fileId: id } },
+        (e) => {
+            // console.log(e)
+            let num = 0;
+            function t() {
+                httpGet(constant.url.file.getDownloadflag, { params: { flag: e.data } },
+                    (e) => {
+                        console.log(e)
+                        if (e.data.ready) {
+                            ElMessage("验证成功！正在开始下载")
+                            let tempLink = document.createElement('a')
+                            tempLink.style.display = 'none'
+                            tempLink.href = constant.url.file.downloadFile + "?downloadId=" + e.data.downloadID + "&nodeId=" + e.data.nodeId + "&fileName=" + name
+                            document.body.appendChild(tempLink)
+                            tempLink.click()
+                            document.body.removeChild(tempLink)
+                            return
+                        } else if (num < 20) {
+                            setTimeout(t, 100);
+                            num++
+                            return
+                        } else
+                            ElMessage("网络错误！")
+                    })
+            }
+            setTimeout(t, 100);
+
+        })
+}
+
+function copyfolder(id, tf) {
     httpPost(constant.url.file.copyFolder, { folderId: id, toFolderId: tf }, undefined,
         (e) => {
             console.log(e)
@@ -115,7 +143,7 @@ function copySelect(toFolderId) {
         if (element.type == 1) {
             copyfile(element.id, toFolderId)
         } else {
-            copyfolad(element.id, toFolderId)
+            copyfolder(element.id, toFolderId)
         }
     });
 }
@@ -126,7 +154,7 @@ function copySelectOk() {
     copyDialogVisible.value = false;
 }
 
-function deletefolad(id) {
+function deletefolder(id) {
     httpPost(constant.url.file.deleteFolder, { folderId: id }, undefined,
         (e) => {
             console.log(e)
@@ -147,7 +175,7 @@ function deleteSelect() {
         if (element.type == 1) {
             deletefile(element.id)
         } else {
-            deletefolad(element.id)
+            deletefolder(element.id)
         }
     });
 }
@@ -159,7 +187,7 @@ function movefile(id, tf) {
         }
     )
 }
-function movefolad(id, tf) {
+function movefolder(id, tf) {
     httpPost(constant.url.file.moveFolder, { folderId: id, toFolderId: tf }, undefined,
         (e) => {
             // if (e.message == "Error") {
@@ -174,9 +202,9 @@ function movefolad(id, tf) {
 function downloadSelect() {
     fileListView.value.tableRef.getSelectionRows().forEach(element => {
         if (element.type == 1) {
-            downloadfile(element.id)
+            downloadfile(element.id, element.name)
         } else {
-            downloadfolad(element.id)
+            downloadfolder(element.id)
         }
     });
 }
@@ -185,7 +213,7 @@ function moveSelect(tofolderId) {
         if (element.type == 1) {
             movefile(element.id, tofolderId)
         } else {
-            movefolad(element.id, tofolderId)
+            movefolder(element.id, tofolderId)
         }
     });
 }
@@ -249,7 +277,7 @@ function uploadfolder(rootid, folder) {
                 //拥有重名文件夹
                 if (item.type == 0 && folder.name == item.name) {
                     for (const item2 of folder.children) {
-                        if (item2.isFolder) {
+                        if (item2.fileObject == null) {
                             uploadfolder(item.id, item2)
                         } else {
                             uploadfile(item.id, item2)
@@ -263,7 +291,7 @@ function uploadfolder(rootid, folder) {
                 (body) => {
                     //创建新文件夹，后上传到文件夹中
                     for (const item of folder.children) {
-                        if (item.isFolder) {
+                        if (item.fileObject == null) {
                             uploadfolder(body.data, item)
                         } else {
                             uploadfile(body.data, item)
@@ -280,19 +308,19 @@ function uploadClick(command) {
     inputObj.setAttribute('multiple', 'true')
     inputObj.onchange = function (event) {
         let files = event.target.files;
-        let head = new PathTreeNode("", true);
-        for (const file of files) {
-            head.addChildren(file.webkitRelativePath, file)
-        }
-        console.log(head)
         switch (command) {
             case "file":
-                for (const file of head.children) {
+                for (const file of files) {
                     uploadfile(nowFolderId.value, file)
                 }
                 break;
             case "folder":
-                uploadfolder(nowFolderId.value, head.children[0])
+                let head = new PathTreeNode("", true);
+                for (const file of files) {
+                    head.addChildren(file.webkitRelativePath, file)
+                }
+                console.log(head)
+                // uploadfolder(nowFolderId.value, head.children[0])
                 break;
         }
         document.body.removeChild(inputObj)

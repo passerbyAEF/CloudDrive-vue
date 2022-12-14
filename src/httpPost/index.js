@@ -12,9 +12,13 @@ function posturl(url, data, config, successCallback, errorCallback) {
             e = e.data
             if (e.status == 303) {
                 window.location.replace(e.data)
+            } else if (e.status == 500) {
+                ElMessage('发生错误，请刷新页面重试！')
+            } else if (e.status == 200) {
+                successCallback(e)
+            } else {
+                ElMessage('未知返回！')
             }
-            
-            successCallback(e)
         })
         .catch(errorCallback)
 
