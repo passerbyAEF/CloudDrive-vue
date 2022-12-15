@@ -3,7 +3,6 @@
 import constant from '../../../constant';
 import UrlItem from './UrlItem.vue';
 import FileListItem from './FileList/FileListItem.vue';
-import UPloadViewItem from './UploadViewItem.vue'
 import httpGet from '../../../httpGet';
 import httpPost from '../../../httpPost'
 import PathTreeNode from '../../../pathTree'
@@ -11,7 +10,6 @@ import { reactive, ref } from 'vue'
 
 const fileListView = ref();
 const urlNav = ref();
-const uploadView = ref();
 
 const selectnum = ref(0);
 const treeRef = ref();
@@ -36,6 +34,8 @@ const treeProps = {
 }
 
 const nowFolderId = ref(0)
+
+const emit = defineEmits(["newUpload"])
 
 httpGet(constant.url.file.getRoot, null,
     (e) => {
@@ -115,7 +115,7 @@ function downloadfile(id, name) {
                             ElMessage("网络错误！")
                     })
             }
-            setTimeout(t, 100);
+            setTimeout(t, 500);
 
         })
 }
@@ -267,7 +267,7 @@ function navGotoFolder(folderId) {
 }
 
 function uploadfile(rootid, file) {
-    uploadView.value.addTask(rootid, file.fileObject)
+    emit("newUpload", rootid, file)
 }
 
 function uploadfolder(rootid, folder) {
@@ -280,7 +280,7 @@ function uploadfolder(rootid, folder) {
                         if (item2.fileObject == null) {
                             uploadfolder(item.id, item2)
                         } else {
-                            uploadfile(item.id, item2)
+                            uploadfile(item.id, item2.fileObject)
                         }
                     }
                     return;
@@ -294,7 +294,7 @@ function uploadfolder(rootid, folder) {
                         if (item.fileObject == null) {
                             uploadfolder(body.data, item)
                         } else {
-                            uploadfile(body.data, item)
+                            uploadfile(body.data, item.fileObject)
                         }
                     }
                 })
@@ -320,7 +320,7 @@ function uploadClick(command) {
                     head.addChildren(file.webkitRelativePath, file)
                 }
                 console.log(head)
-                // uploadfolder(nowFolderId.value, head.children[0])
+                uploadfolder(nowFolderId.value, head.children[0])
                 break;
         }
         document.body.removeChild(inputObj)
@@ -331,6 +331,12 @@ function uploadClick(command) {
     document.body.appendChild(inputObj);
     inputObj.click();
 }
+
+const refresh = function () {
+    fileListView.value.getList(nowFolderId.value)
+}
+
+defineExpose({ refresh })
 </script>
 <template>
     <div class="p-3" style="width: calc(100% - 300px);">
@@ -364,16 +370,6 @@ function uploadClick(command) {
                 </div>
             </el-col>
             <el-col :span="4">
-                <div style="text-align: right;">
-                    <el-dropdown trigger="click">
-                        <button type="button" v-if="selectnum == 0" class="btn btn-primary">传输列表</button>
-                        <template #dropdown>
-                            <el-dropdown-menu>
-                                <UPloadViewItem ref="uploadView" />
-                            </el-dropdown-menu>
-                        </template>
-                    </el-dropdown>
-                </div>
             </el-col>
         </el-row>
         <UrlItem ref="urlNav" class="pt-3 pb-3" @gotoFolder="navGotoFolder" />
