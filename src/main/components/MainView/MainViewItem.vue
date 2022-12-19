@@ -338,7 +338,7 @@ const refresh = function () {
 defineExpose({ refresh })
 </script>
 <template>
-    <div class="p-3" style="width: 100%;">
+    <div class="p-3" style="width: 100%; height:calc(100% - 50px) ;">
         <el-row>
             <el-col :span="20">
                 <div>

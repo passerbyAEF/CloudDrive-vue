@@ -174,7 +174,7 @@ const refresh = function () {
 defineExpose({ setScree, refresh })
 </script>
 <template>
-    <div class="p-3">
+    <div class="p-3" style="height:calc(100% - 50px) ;">
         <div class="mb-3">
             <el-dropdown trigger="click" @command="uploadClick">
                 <button type="button" v-if="selectnum == 0" class="btn btn-primary">上传</button>
@@ -193,8 +193,8 @@ defineExpose({ setScree, refresh })
         </div>
 
 
-        <el-table ref="tableRef" :stripe="true" :data="listData" style="width: 100%;" @select-all="selectButtonClick"
-            @select="selectButtonClick">
+        <el-table ref="tableRef" :stripe="true" :data="listData" height="100%" style="width: 100%;"
+            @select-all="selectButtonClick" @select="selectButtonClick">
             <el-table-column type="selection" width="50dp" />
             <el-table-column property="name" :label="messagetext">
                 <template #default="scope">
