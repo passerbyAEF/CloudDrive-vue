@@ -11,20 +11,17 @@ let authUrl = "/api/auth"
 let mainUrl = "/api/appMain"
 let fileUrl = "/api/file"
 
-
-
-
-
-
 export default {
     url: {
         auth: {
             login: authUrl + "/login",
             register: authUrl + "/register",
+            loginOut: authUrl + "/loginOut"
         },
         file: {
             getRoot: mainUrl + "/File/GetRoot",
             list: mainUrl + "/File/List",
+            screeList: mainUrl + "/File/ScreeList",
 
             createFolder: mainUrl + "/File/CreateFolder",
             copyFolder: mainUrl + "/File/CopyFolder",

@@ -1,5 +1,7 @@
 <!-- 侧边栏用户按钮 -->
-<script setup></script>
+<script setup>
+import constant from '../../../constant';
+</script>
 <template>
     <div class="dropdown border-top">
         <a href="#"
@@ -7,12 +9,12 @@
             id="dropdownUser3" data-bs-toggle="dropdown" aria-expanded="false">
             <!-- <img src="https://github.com/mdo.png" alt="mdo" width="24" height="24" class="rounded-circle"> -->
         </a>
-        <ul class="dropdown-menu text-small shadow" aria-labelledby="dropdownUser3">
+        <ul class="dropdown-menu text-small shadow">
             <li><a class="dropdown-item" href="#">用户设置</a></li>
             <li>
                 <hr class="dropdown-divider">
             </li>
-            <li><a class="dropdown-item" href="#">登出</a></li>
+            <li><a class="dropdown-item" :href="constant.url.auth.loginOut">登出</a></li>
         </ul>
     </div>
 </template>

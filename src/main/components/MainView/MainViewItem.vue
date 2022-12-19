@@ -116,7 +116,6 @@ function downloadfile(id, name) {
                     })
             }
             setTimeout(t, 500);
-
         })
 }
 
@@ -339,7 +338,7 @@ const refresh = function () {
 defineExpose({ refresh })
 </script>
 <template>
-    <div class="p-3" style="width: calc(100% - 300px);">
+    <div class="p-3" style="width: 100%;">
         <el-row>
             <el-col :span="20">
                 <div>
@@ -352,12 +351,11 @@ defineExpose({ refresh })
                             </el-dropdown-menu>
                         </template>
                     </el-dropdown>
-                    <div v-if="selectnum == 0" class="btn-group ps-3" role="group" aria-label="Basic outlined example">
+                    <div v-if="selectnum == 0" class="btn-group ps-3" role="group">
                         <button type="button" class="btn btn-outline-primary"
                             @click="createDialogVisible = true">新建文件夹</button>
-                        <!-- <button type="button" class="btn btn-outline-primary">下载</button> -->
                     </div>
-                    <div v-if="selectnum != 0" class="btn-group ps-3" role="group" aria-label="Basic outlined example">
+                    <div v-if="selectnum != 0" class="btn-group ps-3" role="group">
                         <button type="button" class="btn btn-outline-primary" @click="downloadSelect()">下载</button>
                         <button type="button" class="btn btn-outline-primary" @click="deleteSelect()">删除</button>
                         <button v-if="selectnum == 1" type="button" class="btn btn-outline-primary"
