@@ -39,6 +39,10 @@ export default {
 
             uploadFilePart:fileUrl+"/File/Upload",
             downloadFile:fileUrl+"/File/Download",
+        },
+        recycle:{
+            list : mainUrl + "/Recycle/RecycleList",
+            recovery : mainUrl + "/Recycle/Recovery"
         }
     },
     getImg: function (n) {

@@ -8,10 +8,7 @@ const emit = defineEmits(["newUpload"])
 
 const selectnum = ref(0);
 const screeFlag = ref(0);
-const treeRef = ref();
-const moveDialogVisible = ref(false)
 const renameDialogVisible = ref(false)
-const copyDialogVisible = ref(false)
 const form = reactive({
     name: '',
     region: '',
@@ -140,14 +137,6 @@ function renameSelectOk() {
     });
     form.name = ""
     renameDialogVisible.value = false;
-}
-
-function deletefile(id) {
-    httpPost(constant.url.file.deleteFile, { fileId: id }, undefined,
-        (e) => {
-            refresh()
-        }
-    )
 }
 
 function deleteSelect() {

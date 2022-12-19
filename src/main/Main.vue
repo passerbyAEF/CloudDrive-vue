@@ -4,6 +4,7 @@ import SidebarItem from './components/Siderbar/SidebarItem.vue'
 import ListMenuItem from './components/ListMenu/ListMenuItem.vue'
 import MainViewItem from './components/MainView/MainViewItem.vue'
 import ScreeViewItem from './components/Screen/ScreeViewItem.vue'
+import RecycleViewItem from './components/Recycle/RecycleViewItem.vue'
 import { nextTick, ref } from 'vue';
 
 const mainView = ref()
@@ -25,7 +26,7 @@ function upload(folderid, file) {
 async function setScree(i) {
   viewflag.value = i
   await nextTick()
-  if (i != -1)
+  if (i >= 0)
     screeView.value.setScree(i)
 }
 </script>
@@ -37,6 +38,7 @@ async function setScree(i) {
     <ListMenuItem style="z-index: 1;" @setScree="setScree" />
     <div style="width: calc(100% - 300px);">
       <MainViewItem v-if="viewflag == -1" @newUpload="upload" ref="mainView" />
+      <RecycleViewItem v-else-if="viewflag == -2" />
       <ScreeViewItem v-else ref="screeView" @newUpload="upload" />
     </div>
   </div>

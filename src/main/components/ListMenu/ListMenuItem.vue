@@ -19,6 +19,10 @@ function myFileClick(event) {
 function screeClick(i) {
     emit("setScree", list.value.indexOf(i))
 }
+
+function recycleClick() {
+    emit("setScree", -2)
+}
 </script>
 <template>
     <div class="d-flex flex-column flex-shrink-0 bg-light shadow" style="width: 200px;">
@@ -46,7 +50,7 @@ function screeClick(i) {
             </li>
             <li class="nav-item">
                 <div class="nav-link border-bottom">
-                    <button class="btn btn-primary" style="width: 100%;" type="button">
+                    <button class="btn btn-primary" style="width: 100%;" @click="recycleClick()" type="button">
                         <span>回收站</span>
                     </button>
                 </div>
