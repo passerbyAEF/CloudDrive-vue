@@ -12,7 +12,7 @@ function gotoLogin() {
 }
 </script>
 <template>
-  <form :action="constant.url.auth.registers" method="post">
+  <form :action="constant.url.auth.register" method="post">
     <img class="mb-4" src="https://avatars.githubusercontent.com/u/43606074?v=4" width="150" height="150">
     <h1 class="h3 mb-3 fw-normal">注册</h1>
     <div class="form-floating">
