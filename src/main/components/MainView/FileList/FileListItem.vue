@@ -63,7 +63,7 @@ defineExpose({ getList, tableRef })
 
 </script>
 <template>
-    <el-table ref="tableRef" :stripe="true" :data="listData" height="100%" style="width: 100%;" @row-click="itemClick"
+    <el-table ref="tableRef" :stripe="true" :data="listData" height="calc(100% - 50px)" style="width: 100%;" @row-click="itemClick"
         @select-all="selectButtonClick" @select="selectButtonClick">
         <el-table-column type="selection" width="50dp" />
         <el-table-column property="name" :label="messagetext">

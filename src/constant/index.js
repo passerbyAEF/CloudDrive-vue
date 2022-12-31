@@ -22,6 +22,8 @@ export default {
             getRoot: mainUrl + "/File/GetRoot",
             list: mainUrl + "/File/List",
             screeList: mainUrl + "/File/ScreeList",
+            getStorage: mainUrl + "/File/GetStorage",
+            getMaxStorage: mainUrl + "/File/GetMaxStorage",
 
             createFolder: mainUrl + "/File/CreateFolder",
             copyFolder: mainUrl + "/File/CopyFolder",
@@ -34,15 +36,15 @@ export default {
             deleteFile: mainUrl + "/File/DeleteFile",
             moveFile: mainUrl + "/File/MoveFile",
             renameFile: mainUrl + "/File/RenameFile",
-            getDownloadId:mainUrl+"/File/Download",
-            getDownloadflag:mainUrl+"/File/GetDownloadFlag",
+            getDownloadId: mainUrl + "/File/Download",
+            getDownloadflag: mainUrl + "/File/GetDownloadFlag",
 
-            uploadFilePart:fileUrl+"/File/Upload",
-            downloadFile:fileUrl+"/File/Download",
+            uploadFilePart: fileUrl + "/File/Upload",
+            downloadFile: fileUrl + "/File/Download",
         },
-        recycle:{
-            list : mainUrl + "/Recycle/RecycleList",
-            recovery : mainUrl + "/Recycle/Recovery"
+        recycle: {
+            list: mainUrl + "/Recycle/RecycleList",
+            recovery: mainUrl + "/Recycle/Recovery"
         }
     },
     getImg: function (n) {
@@ -70,5 +72,17 @@ export default {
             return imgimg
         }
         return fileimg
+    },
+    getStorage: function (data) {
+        if (data > 1024 * 1024 * 1024) {
+            return (data / (1024 * 1024 * 1024)).toFixed(2) + "GB";
+        }
+        if (data > 1024 * 1024) {
+            return (data / (1024 * 1024)).toFixed(2) + "MB";
+        }
+        if (data > 1024) {
+            return (data / 1024).toFixed(2) + "KB";
+        }
+        return "0KB"
     }
 }
