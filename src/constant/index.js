@@ -44,7 +44,8 @@ export default {
         },
         recycle: {
             list: mainUrl + "/Recycle/RecycleList",
-            recovery: mainUrl + "/Recycle/Recovery"
+            recovery: mainUrl + "/Recycle/Recovery",
+            delete: mainUrl + "/Recycle/Delete",
         }
     },
     getImg: function (n) {

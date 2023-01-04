@@ -14,6 +14,7 @@ const tableRef = ref()
 function selectButtonClick(selection, row) {
     setMessageText();
 }
+
 function setMessageText() {
     let num = tableRef.value.getSelectionRows().length;
     selectnum.value = num
@@ -49,11 +50,25 @@ function getList() {
 
 function recoveryClick() {
     let files = tableRef.value.getSelectionRows();
+    let list = [];
     files.forEach((item) => {
-        httpPost(constant.url.recycle.recovery, { fileId: item.id }, undefined, (e) => {
-            ElMessage("文件已恢复")
-            getList()
-        })
+        list.push({ id: item.id, isFile: item.type })
+    })
+    httpPost(constant.url.recycle.recovery, list, undefined, (e) => {
+        ElMessage("文件已恢复")
+        getList()
+    })
+}
+
+function deleteClick() {
+    let files = tableRef.value.getSelectionRows();
+    let list = [];
+    files.forEach((item) => {
+        list.push({ id: item.id, isFile: item.type })
+    })
+    httpPost(constant.url.recycle.delete, list, undefined, (e) => {
+        ElMessage("文件已删除")
+        getList()
     })
 }
 
@@ -63,6 +78,7 @@ getList()
     <div class="p-3" style="height:calc(100% - 50px) ;">
         <div class="mb-3">
             <el-button type="primary" size="large" :disabled="selectnum == 0" @click="recoveryClick()">恢复</el-button>
+            <el-button type="primary" size="large" :disabled="selectnum == 0" @click="deleteClick()">删除</el-button>
         </div>
 
         <el-table ref="tableRef" :stripe="true" :data="listData" height="100%" style="width: 100%;"
