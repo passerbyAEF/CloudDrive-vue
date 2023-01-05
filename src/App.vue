@@ -1,10 +1,11 @@
 <script setup>
-
+import zh from 'element-plus/dist/locale/zh-cn.mjs'
 </script>
-
 <template>
-    <router-view ></router-view>
+    <el-config-provider :locale="zh">
+        <router-view></router-view>
+    </el-config-provider>
 </template>
-
 <style scoped>
+
 </style>
