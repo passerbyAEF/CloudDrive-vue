@@ -17,6 +17,47 @@ const createDialogVisible = ref(false)
 const moveDialogVisible = ref(false)
 const renameDialogVisible = ref(false)
 const copyDialogVisible = ref(false)
+const shareDialogVisible = ref(false)
+const shareData = ref({
+    isUseCipher: false, cipher: "", pwd: "", isUseOverdue: false, overdueTime: null,
+    shortcuts: [
+        {
+            text: '明天',
+            value: () => {
+                const date = new Date()
+                date.setTime(date.getTime() + 3600 * 1000 * 24)
+                return date
+            },
+        },
+        {
+            text: '下周',
+            value: () => {
+                const date = new Date()
+                date.setTime(date.getTime() + 3600 * 1000 * 24 * 7)
+                return date
+            },
+        },
+        {
+            text: '下个月',
+            value: () => {
+                const date = new Date()
+                date.setMonth(date.getMonth() + 1)
+                return date
+            },
+        },
+        {
+            text: '一年后',
+            value: () => {
+                const date = new Date()
+                date.setFullYear(date.getFullYear() + 1)
+                return date
+            },
+        },
+    ],
+    disabledDate: (time) => {
+        return time.getTime() < Date.now()
+    }
+})
 const form = reactive({
     name: '',
     region: '',
@@ -44,6 +85,9 @@ httpGet(constant.url.file.getRoot, null,
         urlNav.value.setRootFolderId(e.data)
     })
 
+function stopPropagation(e) {
+    e.stopPropagation();
+}
 
 function setnum(val) {
     selectnum.value = val
@@ -331,6 +375,21 @@ function uploadClick(command) {
     inputObj.click();
 }
 
+function randomPwd() {
+    let chars = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
+    let num
+    let pwd = ""
+    for (let i = 0; i < 10; i++) {
+        num = Number.parseInt(Math.random() * 100)
+        pwd += chars[num % chars.length]
+    }
+    shareData.value.pwd = pwd
+}
+
+function createShare() {
+    
+}
+
 const refresh = function () {
     fileListView.value.getList(nowFolderId.value)
 }
@@ -360,6 +419,8 @@ defineExpose({ refresh })
                         <button type="button" class="btn btn-outline-primary" @click="deleteSelect()">删除</button>
                         <button v-if="selectnum == 1" type="button" class="btn btn-outline-primary"
                             @click="renameDialogVisible = true">重命名</button>
+                        <button v-if="selectnum == 1" type="button" class="btn btn-outline-primary"
+                            @click="shareDialogVisible = true">分享</button>
                         <button type="button" class="btn btn-outline-primary"
                             @click="copyDialogVisible = true">复制</button>
                         <button type="button" class="btn btn-outline-primary"
@@ -434,6 +495,39 @@ defineExpose({ refresh })
         </template>
     </el-dialog>
 
+    <el-dialog v-if="shareDialogVisible" v-model="shareDialogVisible" width="30%" title="分享设置" class="dialog-width">
+        <el-collapse accordion>
+            <el-collapse-item name="1">
+                <template #title>
+                    <el-checkbox v-model="shareData.isUseCipher" @click="stopPropagation" label="使用密码保护" size="large" />
+                </template>
+                <div class="block">
+                    <el-input class="share-pwd" v-model="shareData.pwd" maxlength="10" show-password
+                        placeholder="请输入密码">
+                        <template #append>
+                            <el-button class="m-1" link @click="randomPwd()">随机密码</el-button>
+                        </template>
+                    </el-input>
+                </div>
+            </el-collapse-item>
+            <el-collapse-item name="2">
+                <template #title>
+                    <el-checkbox v-model="shareData.isUseOverdue" @click="stopPropagation" label="自动过期" size="large" />
+                </template>
+                <div class="block">
+                    <el-date-picker style="width: 200px;" v-model="shareData.overdueTime" type="date" placeholder="请选择"
+                        :disabled-date="shareData.disabledDate" :shortcuts="shareData.shortcuts" />
+                    <span>后自动过期</span>
+                </div>
+            </el-collapse-item>
+        </el-collapse>
+        <template #footer>
+            <span class="dialog-footer">
+                <el-button @click="shareDialogVisible = false">关闭</el-button>
+                <el-button type="primary" @click="createShare">创建分享链接</el-button>
+            </span>
+        </template>
+    </el-dialog>
 
 </template>
 <style scoped>
@@ -465,5 +559,16 @@ defineExpose({ refresh })
 .grid-content {
     border-radius: 4px;
     min-height: 36px;
+}
+
+.block {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.share-pwd {
+    width: 300px;
 }
 </style>
