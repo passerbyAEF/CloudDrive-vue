@@ -140,7 +140,7 @@ function countSpeed(a) {
 
 const addTask = function (fId, uploadFile) {
     uploadList.value.push({
-        img: constant.getImg({ name: uploadFile.name, type: 1 }),
+        img: constant.method.getImg({ name: uploadFile.name, type: 1 }),
         name: uploadFile.name,
         fileObject: uploadFile,
         folderId: fId,

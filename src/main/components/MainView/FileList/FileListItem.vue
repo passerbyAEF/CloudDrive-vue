@@ -50,7 +50,7 @@ function setStorage(data) {
 
 function setImgs(data) {
     data.forEach((item) => {
-        item.imgsrc = constant.getImg(item);
+        item.imgsrc = constant.method.getImg(item);
     });
 }
 

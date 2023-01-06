@@ -9,7 +9,7 @@ const nowStorage = ref("0KB")
 const maxStorage = ref("0KB")
 const percentageVal = ref(0)
 
-const emit = defineEmits(["setScree"])
+const emit = defineEmits(["setView"])
 
 var list = ref(['图片', '文档', '视频', '音频', '其他'])
 
@@ -20,40 +20,40 @@ function myFileClick(event) {
     } else {
         event.delegateTarget.children[0].innerText = "v 我的文件"
     }
-    emit("setScree", -1)
+    emit("setView", constant.enum.viewFlag.Main)
 }
 
 function getStorage() {
     httpGet(constant.url.file.getStorage, undefined,
         (body) => {
-            nowStorage.value = constant.getStorage(body.data)
+            nowStorage.value = constant.method.getStorage(body.data)
             if (maxStorage.value != "0KB") {
-                let nowS=nowStorage.value.substring(0,nowStorage.value.length-2)
-                let maxS=maxStorage.value.substring(0,maxStorage.value.length-2)
-                nowS=parseFloat(nowS)
-                maxS=parseFloat(maxS)
+                let nowS = nowStorage.value.substring(0, nowStorage.value.length - 2)
+                let maxS = maxStorage.value.substring(0, maxStorage.value.length - 2)
+                nowS = parseFloat(nowS)
+                maxS = parseFloat(maxS)
                 percentageVal.value = nowS / maxS
             }
         })
     httpGet(constant.url.file.getMaxStorage, undefined,
         (body) => {
-            maxStorage.value = constant.getStorage(body.data)
+            maxStorage.value = constant.method.getStorage(body.data)
             if (nowStorage.value != "0KB") {
-                let nowS=nowStorage.value.substring(0,nowStorage.value.length-2)
-                let maxS=maxStorage.value.substring(0,maxStorage.value.length-2)
-                nowS=parseFloat(nowS)
-                maxS=parseFloat(maxS)
+                let nowS = nowStorage.value.substring(0, nowStorage.value.length - 2)
+                let maxS = maxStorage.value.substring(0, maxStorage.value.length - 2)
+                nowS = parseFloat(nowS)
+                maxS = parseFloat(maxS)
                 percentageVal.value = nowS / maxS
             }
         })
 }
 
 function screeClick(i) {
-    emit("setScree", list.value.indexOf(i))
+    emit("setView", constant.enum.viewFlag.Scree.img + list.value.indexOf(i))
 }
 
 function recycleClick() {
-    emit("setScree", -2)
+    emit("setView", constant.enum.viewFlag.Recycle)
 }
 
 getStorage()

@@ -48,42 +48,58 @@ export default {
             delete: mainUrl + "/Recycle/Delete",
         }
     },
-    getImg: function (n) {
-        if (n.type == 0) return folderimg
-        let filename = n.name.toLowerCase()
-
-        let pptreg = /\.(ppt|pptx)$/
-        let wordreg = /\.(doc|docx)$/
-        let excelreg = /\.(xls|xlsx)$/
-        let pdfreg = /\.(pdf)$/
-        let txtreg = /\.(txt)$/
-        let imgreg = /\.(bmp|jpg|jpeg|png|gif)$/
-
-        if (pptreg.test(filename)) {
-            return pptimg
-        } else if (wordreg.test(filename)) {
-            return wordimg
-        } else if (excelreg.test(filename)) {
-            return excelimg
-        } else if (pdfreg.test(filename)) {
-            return pdfimg
-        } else if (txtreg.test(filename)) {
-            return fileimg
-        } else if (imgreg.test(filename)) {
-            return imgimg
+    enum: {
+        viewFlag: {
+            Main: 1,
+            Recycle: 2,
+            Scree: {
+                img: 30,
+                text: 31,
+                video: 32,
+                audio: 33,
+                outer: 34,
+            },
+            Share: 4,
         }
-        return fileimg
     },
-    getStorage: function (data) {
-        if (data > 1024 * 1024 * 1024) {
-            return (data / (1024 * 1024 * 1024)).toFixed(2) + "GB";
+    method:{
+        getImg: function (n) {
+            if (n.type == 0) return folderimg
+            let filename = n.name.toLowerCase()
+    
+            let pptreg = /\.(ppt|pptx)$/
+            let wordreg = /\.(doc|docx)$/
+            let excelreg = /\.(xls|xlsx)$/
+            let pdfreg = /\.(pdf)$/
+            let txtreg = /\.(txt)$/
+            let imgreg = /\.(bmp|jpg|jpeg|png|gif)$/
+    
+            if (pptreg.test(filename)) {
+                return pptimg
+            } else if (wordreg.test(filename)) {
+                return wordimg
+            } else if (excelreg.test(filename)) {
+                return excelimg
+            } else if (pdfreg.test(filename)) {
+                return pdfimg
+            } else if (txtreg.test(filename)) {
+                return fileimg
+            } else if (imgreg.test(filename)) {
+                return imgimg
+            }
+            return fileimg
+        },
+        getStorage: function (data) {
+            if (data > 1024 * 1024 * 1024) {
+                return (data / (1024 * 1024 * 1024)).toFixed(2) + "GB";
+            }
+            if (data > 1024 * 1024) {
+                return (data / (1024 * 1024)).toFixed(2) + "MB";
+            }
+            if (data > 1024) {
+                return (data / 1024).toFixed(2) + "KB";
+            }
+            return "0KB"
         }
-        if (data > 1024 * 1024) {
-            return (data / (1024 * 1024)).toFixed(2) + "MB";
-        }
-        if (data > 1024) {
-            return (data / 1024).toFixed(2) + "KB";
-        }
-        return "0KB"
     }
 }

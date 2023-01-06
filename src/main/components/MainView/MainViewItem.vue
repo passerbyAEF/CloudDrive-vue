@@ -387,7 +387,7 @@ function randomPwd() {
 }
 
 function createShare() {
-    
+
 }
 
 const refresh = function () {
@@ -398,39 +398,30 @@ defineExpose({ refresh })
 </script>
 <template>
     <div class="p-3" style="width: 100%; height:calc(100% - 50px) ;">
-        <el-row>
-            <el-col :span="20">
-                <div>
-                    <el-dropdown trigger="click" @command="uploadClick">
-                        <button type="button" v-if="selectnum == 0" class="btn btn-primary">上传</button>
-                        <template #dropdown>
-                            <el-dropdown-menu>
-                                <el-dropdown-item command="file">上传文件</el-dropdown-item>
-                                <el-dropdown-item command="folder">上传文件夹</el-dropdown-item>
-                            </el-dropdown-menu>
-                        </template>
-                    </el-dropdown>
-                    <div v-if="selectnum == 0" class="btn-group ps-3" role="group">
-                        <button type="button" class="btn btn-outline-primary"
-                            @click="createDialogVisible = true">新建文件夹</button>
-                    </div>
-                    <div v-if="selectnum != 0" class="btn-group ps-3" role="group">
-                        <button type="button" class="btn btn-outline-primary" @click="downloadSelect()">下载</button>
-                        <button type="button" class="btn btn-outline-primary" @click="deleteSelect()">删除</button>
-                        <button v-if="selectnum == 1" type="button" class="btn btn-outline-primary"
-                            @click="renameDialogVisible = true">重命名</button>
-                        <button v-if="selectnum == 1" type="button" class="btn btn-outline-primary"
-                            @click="shareDialogVisible = true">分享</button>
-                        <button type="button" class="btn btn-outline-primary"
-                            @click="copyDialogVisible = true">复制</button>
-                        <button type="button" class="btn btn-outline-primary"
-                            @click="moveDialogVisible = true">移动</button>
-                    </div>
-                </div>
-            </el-col>
-            <el-col :span="4">
-            </el-col>
-        </el-row>
+        <div>
+            <el-dropdown class="ps-3" trigger="click" @command="uploadClick">
+                <button type="button" v-if="selectnum == 0" class="btn btn-primary">上传</button>
+                <template #dropdown>
+                    <el-dropdown-menu>
+                        <el-dropdown-item command="file">上传文件</el-dropdown-item>
+                        <el-dropdown-item command="folder">上传文件夹</el-dropdown-item>
+                    </el-dropdown-menu>
+                </template>
+            </el-dropdown>
+            <div v-if="selectnum == 0" class="btn-group ps-3" role="group">
+                <button type="button" class="btn btn-outline-primary" @click="createDialogVisible = true">新建文件夹</button>
+            </div>
+            <div v-if="selectnum != 0" class="btn-group" role="group">
+                <button type="button" class="btn btn-outline-primary" @click="downloadSelect()">下载</button>
+                <button type="button" class="btn btn-outline-primary" @click="deleteSelect()">删除</button>
+                <button v-if="selectnum == 1" type="button" class="btn btn-outline-primary"
+                    @click="renameDialogVisible = true">重命名</button>
+                <button v-if="selectnum == 1" type="button" class="btn btn-outline-primary"
+                    @click="shareDialogVisible = true">分享</button>
+                <button type="button" class="btn btn-outline-primary" @click="copyDialogVisible = true">复制</button>
+                <button type="button" class="btn btn-outline-primary" @click="moveDialogVisible = true">移动</button>
+            </div>
+        </div>
         <UrlItem ref="urlNav" class="pt-3 pb-3" @gotoFolder="navGotoFolder" />
         <FileListItem ref="fileListView" @selectnum="setnum" @gotoFolder="fileListGotoFolder" />
     </div>

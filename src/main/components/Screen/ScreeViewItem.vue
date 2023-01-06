@@ -60,7 +60,7 @@ function getList(screeFlag) {
                 }
             });
             body.data.forEach((item) => {
-                item.imgsrc = constant.getImg(item);
+                item.imgsrc = constant.method.getImg(item);
             });
             listData.value = body.data
             tableRef.value.clearSelection()
