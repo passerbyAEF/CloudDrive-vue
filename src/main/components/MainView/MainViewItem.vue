@@ -19,7 +19,7 @@ const renameDialogVisible = ref(false)
 const copyDialogVisible = ref(false)
 const shareDialogVisible = ref(false)
 const shareData = ref({
-    isUseCipher: false, cipher: "", pwd: "", isUseOverdue: false, overdueTime: null,
+    isUseCipher: false, pwd: "", isUseOverdue: false, overdueTime: "",
     shortcuts: [
         {
             text: '明天',
@@ -387,6 +387,24 @@ function randomPwd() {
 }
 
 function createShare() {
+    let shareItem = fileListView.value.tableRef.getSelectionRows()[0];
+    if (shareData.value.isUseOverdue && shareData.value.overdueTime == "") {
+        ElMessage("请设置时间")
+        return
+    }
+    let data = {
+        id: shareItem.id,
+        type: shareItem.type,
+        isUseCipher: shareData.value.isUseCipher,
+        pwd: shareData.value.pwd,
+        isUseOverdue: shareData.value.isUseOverdue,
+        overdueTime: shareData.value.overdueTime,
+    }
+    httpPost(constant.url.share.create, data, undefined,
+        (body) => {
+            shareDialogVisible.value = false
+            ElMessage("创建分享成功！")
+        })
 
 }
 

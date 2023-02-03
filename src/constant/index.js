@@ -46,6 +46,15 @@ export default {
             list: mainUrl + "/Recycle/RecycleList",
             recovery: mainUrl + "/Recycle/Recovery",
             delete: mainUrl + "/Recycle/Delete",
+        },
+        share: {
+            external: {
+                list: mainUrl + "/Share/S" + "/List",
+            },
+            list: mainUrl + "/Share/Control" + "/List",
+            create: mainUrl + "/Share/Control" + "/Create",
+            update: mainUrl + "/Share/Control" + "/Update",
+            delete: mainUrl + "/Share/Control" + "/Delete",
         }
     },
     enum: {
@@ -62,18 +71,18 @@ export default {
             Share: 4,
         }
     },
-    method:{
+    method: {
         getImg: function (n) {
             if (n.type == 0) return folderimg
             let filename = n.name.toLowerCase()
-    
+
             let pptreg = /\.(ppt|pptx)$/
             let wordreg = /\.(doc|docx)$/
             let excelreg = /\.(xls|xlsx)$/
             let pdfreg = /\.(pdf)$/
             let txtreg = /\.(txt)$/
             let imgreg = /\.(bmp|jpg|jpeg|png|gif)$/
-    
+
             if (pptreg.test(filename)) {
                 return pptimg
             } else if (wordreg.test(filename)) {
@@ -83,7 +92,7 @@ export default {
             } else if (pdfreg.test(filename)) {
                 return pdfimg
             } else if (txtreg.test(filename)) {
-                return fileimg
+                return txtimg
             } else if (imgreg.test(filename)) {
                 return imgimg
             }
