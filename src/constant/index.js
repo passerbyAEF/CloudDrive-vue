@@ -51,7 +51,8 @@ export default {
             external: {
                 list: mainUrl + "/Share" + "/List",
                 checkSecretKey: mainUrl + "/Share" + "/Check",
-                getEntityId: mainUrl + "/Share" + "/getEntityId"
+                getEntityId: mainUrl + "/Share" + "/getEntityId",
+                downloadShareFile: mainUrl + "/Share" + "/Download",
             },
             list: mainUrl + "/Share/Control" + "/List",
             create: mainUrl + "/Share/Control" + "/Create",

@@ -35,6 +35,45 @@ function navGotoPath(path) {
     history.pushState({ path: nowpath.value }, document.title, `/s/${shareId}${nowpath.value}?secretKey=${key}`)
 }
 
+function downloadfile(name) {
+    ElMessage("确认中，正在等待下载")
+    httpGet(constant.url.share.external.downloadShareFile, { params: { id: shareId, path: nowpath.value, fileName: name, secretKey: key } },
+        (e) => {
+            // console.log(e)
+            let num = 0;
+            function t() {
+                httpGet(constant.url.file.getDownloadflag, { params: { flag: e.data } },
+                    (e) => {
+                        console.log(e)
+                        if (e.data.ready) {
+                            ElMessage("验证成功！正在开始下载")
+                            let tempLink = document.createElement('a')
+                            tempLink.style.display = 'none'
+                            tempLink.href = constant.url.file.downloadFile + "?downloadId=" + e.data.downloadID + "&nodeId=" + e.data.nodeId + "&fileName=" + name
+                            document.body.appendChild(tempLink)
+                            tempLink.click()
+                            document.body.removeChild(tempLink)
+                            return
+                        } else if (num < 20) {
+                            setTimeout(t, 100);
+                            num++
+                            return
+                        } else
+                            ElMessage("网络错误！")
+                    })
+            }
+            setTimeout(t, 500);
+        })
+}
+
+function downloadSelect() {
+    fileListView.value.tableRef.getSelectionRows().forEach(element => {
+        if (element.type == 1) {
+            downloadfile(element.name)
+        }
+    });
+}
+
 onMounted(() => {
     httpGet(constant.url.share.external.getEntityId, { params: { id: shareId } },
         (e) => {
