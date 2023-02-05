@@ -9,6 +9,16 @@ let routes = [
         mode: "history"
     },
     {
+        path: '/s/:pathMatch(.*)+',
+        component: () => import('Share@/Share.vue'),
+        mode: "history"
+    },
+    {
+        path: '/share/init',
+        component: () => import('Share@/init.vue'),
+        mode: "history"
+    },
+    {
         path: '/login',
         component: () => import('Login@/App.vue'),
         mode: "history"

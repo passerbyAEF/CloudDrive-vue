@@ -81,7 +81,7 @@ const emit = defineEmits(["newUpload"])
 httpGet(constant.url.file.getRoot, null,
     (e) => {
         nowFolderId.value = e.data;
-        fileListView.value.getList(e.data)
+        fileListView.value.getFileList(e.data)
         urlNav.value.setRootFolderId(e.data)
     })
 
@@ -97,9 +97,9 @@ function createFolder() {
     httpPost(constant.url.file.createFolder, { name: form.name, parentId: nowFolderId.value }, undefined,
         (e) => {
             console.log(e)
-            fileListView.value.getList(nowFolderId.value)
+            fileListView.value.getFileList(nowFolderId.value)
         }, (error) => {
-            //setTimeout(200,getList(folderId))
+            
         }
     )
     createDialogVisible.value = false
@@ -167,7 +167,7 @@ function copyfolder(id, tf) {
     httpPost(constant.url.file.copyFolder, { folderId: id, toFolderId: tf }, undefined,
         (e) => {
             console.log(e)
-            fileListView.value.getList(nowFolderId.value)
+            fileListView.value.getFileList(nowFolderId.value)
         }
     )
 }
@@ -176,7 +176,7 @@ function copyfile(id, tf) {
     httpPost(constant.url.file.copyFile, { fileId: id, toFolderId: tf }, undefined,
         (e) => {
             console.log(e)
-            fileListView.value.getList(nowFolderId.value)
+            fileListView.value.getFileList(nowFolderId.value)
         }
     )
 }
@@ -201,7 +201,7 @@ function deletefolder(id) {
     httpPost(constant.url.file.deleteFolder, { folderId: id }, undefined,
         (e) => {
             console.log(e)
-            fileListView.value.getList(nowFolderId.value)
+            fileListView.value.getFileList(nowFolderId.value)
         }
     )
 }
@@ -209,7 +209,7 @@ function deletefile(id) {
     httpPost(constant.url.file.deleteFile, { fileId: id }, undefined,
         (e) => {
             console.log(e)
-            fileListView.value.getList(nowFolderId.value)
+            fileListView.value.getFileList(nowFolderId.value)
         }
     )
 }
@@ -226,7 +226,7 @@ function movefile(id, tf) {
     httpPost(constant.url.file.moveFile, { fileId: id, toFolderId: tf }, undefined,
         (e) => {
             console.log(e)
-            fileListView.value.getList(nowFolderId.value)
+            fileListView.value.getFileList(nowFolderId.value)
         }
     )
 }
@@ -237,7 +237,7 @@ function movefolder(id, tf) {
             //     ElMessage(e.data)
             // }
             console.log(e)
-            fileListView.value.getList(nowFolderId.value)
+            fileListView.value.getFileList(nowFolderId.value)
         }
     )
 }
@@ -264,7 +264,7 @@ function moveSelect(tofolderId) {
 function renameFile(fileId, newName) {
     httpPost(constant.url.file.renameFile, { fileId: fileId, name: newName }, undefined,
         (e) => {
-            fileListView.value.getList(nowFolderId.value)
+            fileListView.value.getFileList(nowFolderId.value)
         }
     )
 }
@@ -272,7 +272,7 @@ function renameFile(fileId, newName) {
 function renameFolder(folderId, newName) {
     httpPost(constant.url.file.renameFolder, { folderId: folderId, name: newName }, undefined,
         (e) => {
-            fileListView.value.getList(nowFolderId.value)
+            fileListView.value.getFileList(nowFolderId.value)
         }
     )
 }
@@ -300,12 +300,12 @@ function folderSelectOK() {
 }
 
 function fileListGotoFolder(data) {
-    fileListView.value.getList(data.folderId)
+    fileListView.value.getFileList(data.folderId)
     urlNav.value.addFolder({ name: data.name, folderId: data.folderId })
     nowFolderId.value = data.folderId
 }
 function navGotoFolder(folderId) {
-    fileListView.value.getList(folderId)
+    fileListView.value.getFileList(folderId)
     nowFolderId.value = folderId
 }
 
@@ -409,7 +409,7 @@ function createShare() {
 }
 
 const refresh = function () {
-    fileListView.value.getList(nowFolderId.value)
+    fileListView.value.getFileList(nowFolderId.value)
 }
 
 defineExpose({ refresh })

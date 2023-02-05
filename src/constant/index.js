@@ -49,7 +49,9 @@ export default {
         },
         share: {
             external: {
-                list: mainUrl + "/Share/S" + "/List",
+                list: mainUrl + "/Share" + "/List",
+                checkSecretKey: mainUrl + "/Share" + "/Check",
+                getEntityId: mainUrl + "/Share" + "/getEntityId"
             },
             list: mainUrl + "/Share/Control" + "/List",
             create: mainUrl + "/Share/Control" + "/Create",
@@ -109,6 +111,16 @@ export default {
                 return (data / 1024).toFixed(2) + "KB";
             }
             return "0KB"
+        },
+        GetQueryString: function (name) {
+            var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+            var r = window.location.search.substr(1).match(reg); //获取url中"?"符后的字符串并正则匹配
+            var context = "";
+            if (r != null)
+                context = decodeURIComponent(r[2]);
+            reg = null;
+            r = null;
+            return context == null || context == "" || context == "undefined" ? "" : context;
         }
     }
 }

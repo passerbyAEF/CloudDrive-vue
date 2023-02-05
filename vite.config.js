@@ -19,6 +19,7 @@ export default defineConfig({
   resolve: {
     alias: {
       'Main@': fileURLToPath(new URL('./src/main', import.meta.url)),
+      'Share@': fileURLToPath(new URL('./src/share', import.meta.url)),
       'Login@': fileURLToPath(new URL('./src/login', import.meta.url))
     }
   },

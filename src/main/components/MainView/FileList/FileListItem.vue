@@ -3,7 +3,9 @@
 import constant from '../../../../constant'
 import httpGet from '../../../../httpGet'
 import { ref } from 'vue';
+import { useRouter } from 'vue-router';
 
+const router = useRouter()
 const tableRef = ref()
 const messagetext = ref()
 const emit = defineEmits(['selectnum', 'gotoFolder'])
@@ -23,15 +25,33 @@ function setMessageText() {
     }
 }
 
-const getList = function (f) {
-    httpGet(constant.url.file.list, { params: { folderId: f } },
+const getFileList = function (f) {
+    getList(constant.url.file.list, { folderId: f })
+}
+
+const getShareList = function (f, path, key) {
+    getList(constant.url.share.external.list, { id: f, path: path, secretKey: key }, (e) => {
+        if (e.status == 401) {
+            ElMessageBox.alert('密钥错误！', '错误！', {
+                confirmButtonText: '确认',
+                type: 'warning',
+                callback: () => {
+                    router.push(`/share/init?id=${f}&path=${path}`)
+                }
+            })
+        }
+    })
+}
+
+function getList(path, par, callback) {
+    httpGet(path, { params: par },
         (body) => {
             setStorage(body.data)
             setImgs(body.data)
             listData.value = body.data
             tableRef.value.clearSelection()
             setMessageText()
-        })
+        }, undefined, callback)
 }
 
 function setStorage(data) {
@@ -59,12 +79,12 @@ function itemClick(row, column, event) {
         emit("gotoFolder", { name: row.name, folderId: row.id })
 }
 
-defineExpose({ getList, tableRef })
+defineExpose({ getFileList, getShareList, tableRef })
 
 </script>
 <template>
-    <el-table ref="tableRef" :stripe="true" :data="listData" height="calc(100% - 50px)" style="width: 100%;" @row-click="itemClick"
-        @select-all="selectButtonClick" @select="selectButtonClick">
+    <el-table ref="tableRef" :stripe="true" :data="listData" height="calc(100% - 50px)" style="width: 100%;"
+        @row-click="itemClick" @select-all="selectButtonClick" @select="selectButtonClick">
         <el-table-column type="selection" width="50dp" />
         <el-table-column property="name" :label="messagetext">
             <template #default="scope">

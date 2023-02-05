@@ -2,7 +2,7 @@
 <script setup>
 import { ref } from 'vue';
 
-const emit = defineEmits(["gotoFolder"])
+const emit = defineEmits(["gotoFolder","gotoSharePath"])
 let urlobj = ref([])
 let lastobj = ref()
 const setRootFolderId = function (rootId) {
@@ -23,6 +23,14 @@ function itemClick(e) {
     urlobj.value = urlobj.value.slice(0, i + 1)
     lastobj.value = urlobj.value[urlobj.value.length - 1].folderId
     emit("gotoFolder", folderId)
+
+    //专门针对分享做的适配
+    let url="/"
+    for (let index = 1; index < urlobj.value.length; index++) {
+        url+=urlobj.value[index].name
+        url+="/"
+    }
+    emit("gotoSharePath",url)
 }
 
 function goUp() {
@@ -30,6 +38,14 @@ function goUp() {
     let folderId = urlobj.value[urlobj.value.length - 2].folderId
     urlobj.value = urlobj.value.slice(0, urlobj.value.length - 1)
     emit("gotoFolder", folderId)
+    
+    //专门针对分享做的适配
+    let url="/"
+    for (let index = 1; index < urlobj.value.length; index++) {
+        url+=urlobj.value[index].name
+        url+="/"
+    }
+    emit("gotoSharePath",url)
 }
 defineExpose({ setRootFolderId, addFolder })
 </script>
