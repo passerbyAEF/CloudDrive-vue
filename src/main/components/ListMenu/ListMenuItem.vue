@@ -5,8 +5,8 @@ import httpGet from '../../../httpGet'
 import httpPost from '../../../httpPost'
 import { ref } from 'vue'
 
-const nowStorage = ref("0KB")
-const maxStorage = ref("0KB")
+const nowStorage = ref(0)
+const maxStorage = ref(0)
 const percentageVal = ref(0)
 
 const emit = defineEmits(["setView"])
@@ -26,24 +26,22 @@ function myFileClick(event) {
 function getStorage() {
     httpGet(constant.url.file.getStorage, undefined,
         (body) => {
-            nowStorage.value = constant.method.getStorage(body.data)
-            if (maxStorage.value != "0KB") {
-                let nowS = nowStorage.value.substring(0, nowStorage.value.length - 2)
-                let maxS = maxStorage.value.substring(0, maxStorage.value.length - 2)
-                nowS = parseFloat(nowS)
-                maxS = parseFloat(maxS)
+            nowStorage.value = body.data
+            if (maxStorage.value != 0) {
+                let nowS = parseFloat(nowStorage.value)
+                let maxS = parseFloat(maxStorage.value)
                 percentageVal.value = nowS / maxS
+                percentageVal.value *= 100
             }
         })
     httpGet(constant.url.file.getMaxStorage, undefined,
         (body) => {
-            maxStorage.value = constant.method.getStorage(body.data)
-            if (nowStorage.value != "0KB") {
-                let nowS = nowStorage.value.substring(0, nowStorage.value.length - 2)
-                let maxS = maxStorage.value.substring(0, maxStorage.value.length - 2)
-                nowS = parseFloat(nowS)
-                maxS = parseFloat(maxS)
+            maxStorage.value = body.data
+            if (nowStorage.value != 0) {
+                let nowS = parseFloat(nowStorage.value)
+                let maxS = parseFloat(maxStorage.value)
                 percentageVal.value = nowS / maxS
+                percentageVal.value *= 100
             }
         })
 }
@@ -97,7 +95,7 @@ getStorage()
                 <div>
                     <span>当前容量：</span>
                     <el-progress :percentage="percentageVal" :show-text="false" />
-                    <span>{{ nowStorage }}/{{ maxStorage }}</span>
+                    <span>{{ constant.method.getStorage(nowStorage) }}/{{ constant.method.getStorage(maxStorage) }}</span>
                 </div>
             </el-footer>
         </el-container>

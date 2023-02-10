@@ -56,15 +56,8 @@ function getList(path, par, callback) {
 
 function setStorage(data) {
     data.forEach((item) => {
-        if (item.storage > 1024 * 1024 * 1024) {
-            item.size = (item.storage / (1024 * 1024 * 1024)).toFixed(2) + "GB";
-        }
-        if (item.storage > 1024 * 1024) {
-            item.size = (item.storage / (1024 * 1024)).toFixed(2) + "MB";
-        }
-        if (item.storage > 1024) {
-            item.size = (item.storage / 1024).toFixed(2) + "KB";
-        }
+        if (item.type == 1)
+            item.size = constant.method.getStorage(item.storage)
     });
 }
 

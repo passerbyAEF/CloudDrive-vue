@@ -36,11 +36,12 @@ function uploadFilePart(task) {
         },
         (e) => {
             task.partId += 1
-            if (task.partId * partSize < task.fileObject.size) {
-                uploadFilePart(task)
-            } else {
-                taskOK(task)
-            }
+            if (!task.isPause)
+                if (task.partId * partSize < task.fileObject.size) {
+                    uploadFilePart(task)
+                } else {
+                    taskOK(task)
+                }
         }
     )
 }
@@ -165,11 +166,13 @@ setInterval(() => {
             let i = (item.partId - item.lastPartId) * partSize
             item.speed = countSpeed(i)
             item.percentage = Number.parseInt(((item.partId * partSize) / item.fileObject.size) * 100)
+            item.lastPartId = item.partId
         }
     }
 }, 1000);
 
 function stopButton(task) {
+    task.isPause = true;
     uploadList.value = uploadList.value.filter((e) => {
         return task != e;
     })
