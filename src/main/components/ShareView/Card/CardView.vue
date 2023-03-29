@@ -60,6 +60,8 @@ const overdueTimeDialogData = ref({
     }
 })
 
+cipherDialogData.value.pwd = props.data.secretKey;
+
 function deleteshare() {
     deleteOrOpenDialogData.value.callback = () => {
         httpPost(constant.url.share.delete, { id: props.data.id }, undefined,
@@ -124,6 +126,14 @@ function randomPwd() {
 function stopPropagation(e) {
     e.stopPropagation();
 }
+
+function openShareTag() {
+    let url = "/S/" + props.data.id;
+    if (props.data.secretKey != null) {
+        url += '?secretKey=' + props.data.secretKey
+    }
+    window.open(url);
+}
 </script>
 <template>
     <div class="shadow card m-3">
@@ -146,7 +156,7 @@ function stopPropagation(e) {
                 <el-button @click="updatecipher()" class="m-1" size="large" :icon="Key" circle text />
             </el-tooltip>
             <el-tooltip placement="top" content="打开">
-                <el-button class="m-1" size="large" :icon="open" circle text />
+                <el-button @click="openShareTag()" class="m-1" size="large" :icon="open" circle text />
             </el-tooltip>
         </div>
     </div>

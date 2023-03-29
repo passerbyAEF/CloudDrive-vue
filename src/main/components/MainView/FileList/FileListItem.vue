@@ -39,6 +39,11 @@ const getShareList = function (f, path, key) {
                     router.push(`/share/init?id=${f}&path=${path}`)
                 }
             })
+        }else if(e.status == 409){
+            ElMessageBox.alert('此分享已经过期！', '错误！', {
+                confirmButtonText: '确认',
+                type: 'warning'
+            })
         }
     })
 }
