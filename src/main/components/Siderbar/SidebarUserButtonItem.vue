@@ -1,6 +1,16 @@
 <!-- 侧边栏用户按钮 -->
 <script setup>
+import { ref } from 'vue';
 import constant from '../../../constant';
+import httpGet from '../../../httpGet';
+
+const flag=ref(false);
+
+httpGet(constant.url.auth.isAdmin, undefined,
+    (body) => {
+        flag.value=body.data;
+    }, undefined,)
+
 </script>
 <template>
     <div class="dropdown border-top">
@@ -10,7 +20,8 @@ import constant from '../../../constant';
             <!-- <img src="https://github.com/mdo.png" alt="mdo" width="24" height="24" class="rounded-circle"> -->
         </a>
         <ul class="dropdown-menu text-small shadow">
-            <li><a class="dropdown-item" href="#">用户设置</a></li>
+            <li v-if="flag"><a class="dropdown-item" href="http://localhost:80/dev-api/exLogin?username=admin&password=admin123">管理后台</a></li>
+            <!-- <li><a class="dropdown-item" href="#">用户设置</a></li> -->
             <li>
                 <hr class="dropdown-divider">
             </li>
@@ -18,6 +29,5 @@ import constant from '../../../constant';
         </ul>
     </div>
 </template>
-<style>
-</style>
+<style></style>
 

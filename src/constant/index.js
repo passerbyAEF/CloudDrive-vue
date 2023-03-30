@@ -16,7 +16,8 @@ export default {
         auth: {
             login: authUrl + "/login",
             register: authUrl + "/register",
-            loginOut: authUrl + "/loginOut"
+            loginOut: authUrl + "/loginOut",
+            isAdmin: authUrl + "/isAdmin"
         },
         file: {
             getRoot: mainUrl + "/File/GetRoot",
